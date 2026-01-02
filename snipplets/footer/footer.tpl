@@ -11,186 +11,117 @@
 
 {% set has_seal_logos = store.afip or ebit or settings.custom_seal_code or ("seal_img.jpg" | has_custom_image) %}
 {% set show_help = not has_products and not has_social_network %}
-<footer class="js-footer js-hide-footer-while-scrolling {% if settings.footer_colors %}footer-colors{% endif %} display-when-content-ready overflow-none" data-store="footer">
-	{% if has_social_network %}
-		<div class="social-footer text-center">
-			{% include "snipplets/social/social-links.tpl" %}
-		</div>
-	{% endif %}
+<footer class="js-footer js-hide-footer-while-scrolling footer-minimal {% if settings.footer_colors %}footer-colors{% endif %} display-when-content-ready overflow-none" data-store="footer">
 	{% if template != 'password' %}
-		<div class="container py-md-3">
-			<div class="row">
-
-				{# Foot Nav #}
-				{% if has_footer_menu %}
-					<div class="{% if settings.footer_menus_toggle %}js-accordion-container accordion{% endif %} col-md">
-						{% if settings.footer_menus_toggle %}
-							<a href="#" class="js-accordion-toggle-mobile row">
-						{% endif %}
-							{% if settings.footer_menu_title %}
-								<div class="font-small text-uppercase font-weight-bold {% if settings.footer_menus_toggle %}col p-3{% else %}py-3{% endif %}">{{ settings.footer_menu_title }}</div>
-							{% endif %}
-						{% if settings.footer_menus_toggle %}
-								<div class="d-md-none col-auto icon-48px">
-									<span class="js-accordion-toggle-inactive">
-										{% include "snipplets/svg/chevron-down.tpl" with {svg_custom_class: "icon-inline icon-w-14 icon-lg"} %}
-									</span>
-									<span class="js-accordion-toggle-inactive" style="display: none;">
-										{% include "snipplets/svg/chevron-up.tpl" with {svg_custom_class: "icon-inline icon-w-14 icon-lg"} %}
-									</span>
-								</div>
-							</a>
-							<div class="js-accordion-content js-accordion-content-mobile">
-						{% endif %}
-								{% include "snipplets/navigation/navigation-foot.tpl" %}
-						{% if settings.footer_menus_toggle %}
-							</div>
+		<div class="container">
+			<div class="footer-main row">
+				<div class="col-md-4 footer-column">
+					<div class="footer-brand">
+						{{ component('logos/logo', {logo_size: 'medium', logo_img_classes: 'footer-logo-img transition-soft', logo_text_classes: 'h4 m-0'}) }}
+						{% if has_footer_about %}
+							<p class="footer-tagline">{{ settings.footer_about_description }}</p>
 						{% endif %}
 					</div>
-				{% endif %}
-
-				{# Foot Nav Secondary #}
-				{% if has_footer_menu_secondary %}
-					<div class="{% if settings.footer_menus_toggle %}js-accordion-container accordion{% endif %} col-md">
-						{% if settings.footer_menus_toggle %}
-							<a href="#" class="js-accordion-toggle-mobile row">
-						{% endif %}
-							{% if settings.footer_menu_secondary_title %}
-								<div class="font-small text-uppercase font-weight-bold {% if settings.footer_menus_toggle %}col p-3{% else %}py-3{% endif %}">{{ settings.footer_menu_secondary_title }}</div>
-							{% endif %}
-						{% if settings.footer_menus_toggle %}
-								<div class="d-md-none col-auto icon-48px">
-									<span class="js-accordion-toggle-inactive">
-										{% include "snipplets/svg/chevron-down.tpl" with {svg_custom_class: "icon-inline icon-w-14 icon-lg"} %}
-									</span>
-									<span class="js-accordion-toggle-inactive" style="display: none;">
-										{% include "snipplets/svg/chevron-up.tpl" with {svg_custom_class: "icon-inline icon-w-14 icon-lg"} %}
-									</span>
-								</div>
-							</a>
-							<div class="js-accordion-content js-accordion-content-mobile">
-						{% endif %}
-								{% include "snipplets/navigation/navigation-foot-secondary.tpl" %}
-						{% if settings.footer_menus_toggle  %}
-							</div>
-						{% endif %}
-					</div>
-				{% endif %}
-
-				{# Contact info #}
-				{% if has_footer_contact_info %}
-					<div class="{% if settings.footer_menus_toggle %}js-accordion-container accordion{% endif %} col-md">
-						{% if settings.footer_menus_toggle %}
-							<a href="#" class="js-accordion-toggle-mobile row">
-						{% endif %}
-							{% if settings.footer_contact_title %}
-								<div class="font-small text-uppercase font-weight-bold {% if settings.footer_menus_toggle %}col p-3{% else %}py-3{% endif %}">{{ settings.footer_contact_title }}</div>
-							{% endif %}
-						{% if settings.footer_menus_toggle %}
-								<div class="d-md-none col-auto icon-48px">
-									<span class="js-accordion-toggle-inactive">
-										{% include "snipplets/svg/chevron-down.tpl" with {svg_custom_class: "icon-inline icon-w-14 icon-lg"} %}
-									</span>
-									<span class="js-accordion-toggle-inactive" style="display: none;">
-										{% include "snipplets/svg/chevron-up.tpl" with {svg_custom_class: "icon-inline icon-w-14 icon-lg"} %}
-									</span>
-								</div>
-							</a>
-							<div class="js-accordion-content js-accordion-content-mobile">
-						{% endif %}
-								{% include "snipplets/contact-links.tpl" with {footer: true} %}
-						{% if settings.footer_menus_toggle %}
-							</div>
-						{% endif %}
-					</div>
-				{% endif %}
-
-				{% if settings.news_show %}
-					<div class="col-md{% if not ((has_footer_menu and has_footer_menu_secondary) or (has_footer_menu and has_footer_contact_info) or (has_footer_menu_secondary and has_footer_contact_info)) %}-4{% endif %}">
-						{% include 'snipplets/newsletter.tpl' %}
-					</div>
-				{% endif %}
-
+					{% if has_social_network %}
+						<div class="footer-social">
+							{% include "snipplets/social/social-links.tpl" %}
+						</div>
+					{% endif %}
+					{% if settings.news_show %}
+						<div class="footer-newsletter">
+							{% include 'snipplets/newsletter.tpl' %}
+						</div>
+					{% endif %}
+				</div>
+				<div class="col-md-4 footer-column">
+					{% if has_footer_menu %}
+						<h3 class="footer-title">{{ settings.footer_menu_title ?: "Navegación" | translate }}</h3>
+						{% include "snipplets/navigation/navigation-foot.tpl" %}
+					{% endif %}
+					{% if has_footer_menu_secondary %}
+						<h3 class="footer-title mt-3">{{ settings.footer_menu_secondary_title ?: "Más" | translate }}</h3>
+						{% include "snipplets/navigation/navigation-foot-secondary.tpl" %}
+					{% endif %}
+				</div>
+				<div class="col-md-4 footer-column">
+					{% if has_footer_contact_info %}
+						<h3 class="footer-title">{{ settings.footer_contact_title ?: "Contacto" | translate }}</h3>
+						{% include "snipplets/contact-links.tpl" with {footer: true} %}
+					{% endif %}
+				</div>
 			</div>
 
-		</div>
-
-		{% if has_shipping_payment_logos or has_languages or has_seal_logos %}
-			<div class="divider m-0"></div>
-			<div class="container">
-				{% if has_shipping_payment_logos or has_languages %}
-					<div class="row align-items-center py-4">
-						{# Logos Payments and Shipping #}
-
-						{% if has_payment_logos %}
-							<div class="col-md footer-payments-shipping-logos mb-3 mb-md-0{% if has_languages %} mt-md-1{% endif %}">
-								<span class="d-block d-md-inline-block align-middle mb-3 mb-md-1 mr-md-2">{{ "Medios de pago" | translate }}</span>
-								<span class="d-inline-block align-middle">
-									{{ component('payment-shipping-logos', {'type' : 'payments'}) }}
-								</span>
-							</div>
-						{% endif %}
-
-						{% if has_shipping_logos %}
-							<div class="col-md footer-payments-shipping-logos mb-3 mb-md-0{% if has_languages %} mt-md-1{% endif %}">
-								<span class="d-block d-md-inline-block align-middle mb-3 mb-md-1 mr-md-2">{{ "Medios de envío" | translate }}</span>
-								<span class="d-inline-block align-middle">
-									{{ component('payment-shipping-logos', {'type' : 'shipping'}) }}
-								</span>
-							</div>
-						{% endif %}
-
-						{# Language selector #}
-
-						{% if has_languages %}
-							<div class="col-md-auto{% if has_shipping_payment_logos %} mt-1 mt-md-0{% endif %}">
-								<span class="d-inline-block align-middle mr-2">{{ "Idiomas y monedas" | translate }}</span>
-								{% include "snipplets/navigation/navigation-lang.tpl" %}
-							</div>
-						{% endif %}
-					</div>
-				{% endif %}
-
-				{# AFIP - EBIT - Custom Seal #}
-				{% if has_seal_logos %}
-					<div class="row text-center">
-						<div class="col p-3">
-							{% if store.afip or ebit %}
-								{% if store.afip %}
-									<div class="footer-logo afip seal-afip">
-										{{ store.afip | raw }}
-									</div>
-								{% endif %}
-								{% if ebit %}
-									<div class="footer-logo ebit seal-ebit">
-										{{ ebit }}
-									</div>
-								{% endif %}
+			{% if has_shipping_payment_logos or has_languages or has_seal_logos %}
+				<div class="footer-divider"></div>
+				<div class="footer-extras">
+					{% if has_shipping_payment_logos or has_languages %}
+						<div class="row align-items-center">
+							{% if has_payment_logos %}
+								<div class="col-md footer-payments-shipping-logos mb-3 mb-md-0">
+									<span class="footer-subtitle">{{ "Medios de pago" | translate }}</span>
+									<span class="d-inline-block align-middle">
+										{{ component('payment-shipping-logos', {'type' : 'payments'}) }}
+									</span>
+								</div>
 							{% endif %}
-							{% if "seal_img.jpg" | has_custom_image or settings.custom_seal_code %}
-								{% if "seal_img.jpg" | has_custom_image %}
-									<div class="footer-logo custom-seal">
-										{% if settings.seal_url != '' %}
-											<a href="{{ settings.seal_url | setting_url }}" target="_blank">
-										{% endif %}
-											<img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ "seal_img.jpg" | static_url }}" class="custom-seal-img lazyload" alt="{{ 'Sello de' | translate }} {{ store.name }}"/>
-										{% if settings.seal_url != '' %}
-											</a>
-										{% endif %}
-									</div>
-								{% endif %}
-								{% if settings.custom_seal_code %}
-									<div class="custom-seal custom-seal-code">
-										{{ settings.custom_seal_code | raw }}
-									</div>
-								{% endif %}
+
+							{% if has_shipping_logos %}
+								<div class="col-md footer-payments-shipping-logos mb-3 mb-md-0">
+									<span class="footer-subtitle">{{ "Medios de envío" | translate }}</span>
+									<span class="d-inline-block align-middle">
+										{{ component('payment-shipping-logos', {'type' : 'shipping'}) }}
+									</span>
+								</div>
+							{% endif %}
+
+							{% if has_languages %}
+								<div class="col-md-auto">
+									<span class="footer-subtitle d-block mb-2">{{ "Idiomas y monedas" | translate }}</span>
+									{% include "snipplets/navigation/navigation-lang.tpl" %}
+								</div>
 							{% endif %}
 						</div>
-					</div>
-				{% endif %}
+					{% endif %}
 
-			</div>
-		{% endif %}
+					{% if has_seal_logos %}
+						<div class="row text-center">
+							<div class="col pt-3">
+								{% if store.afip or ebit %}
+									{% if store.afip %}
+										<div class="footer-logo afip seal-afip">
+											{{ store.afip | raw }}
+										</div>
+									{% endif %}
+									{% if ebit %}
+										<div class="footer-logo ebit seal-ebit">
+											{{ ebit }}
+										</div>
+									{% endif %}
+								{% endif %}
+								{% if "seal_img.jpg" | has_custom_image or settings.custom_seal_code %}
+									{% if "seal_img.jpg" | has_custom_image %}
+										<div class="footer-logo custom-seal">
+											{% if settings.seal_url != '' %}
+												<a href="{{ settings.seal_url | setting_url }}" target="_blank">
+											{% endif %}
+												<img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ "seal_img.jpg" | static_url }}" class="custom-seal-img lazyload" alt="{{ 'Sello de' | translate }} {{ store.name }}"/>
+											{% if settings.seal_url != '' %}
+												</a>
+											{% endif %}
+										</div>
+									{% endif %}
+									{% if settings.custom_seal_code %}
+										<div class="custom-seal custom-seal-code">
+											{{ settings.custom_seal_code | raw }}
+										</div>
+									{% endif %}
+								{% endif %}
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
 	{% endif %}
 
 	<div class="js-footer-legal footer-legal">

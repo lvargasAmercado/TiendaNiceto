@@ -87,6 +87,27 @@
   --label-background: {{ label_background }};
   --label-foreground: {{ label_foreground }};
 
+  {# Minimal design system #}
+
+  --bg: var(--main-background);
+  --text: var(--main-foreground);
+  --muted: var(--main-foreground-opacity-60);
+  --border: var(--main-foreground-opacity-10);
+  --accent: var(--accent-color);
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  --container-width: 1200px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
   {# Optional colors #}
 
   --adbar-background: {{ adbar_background }};
