@@ -1,54 +1,292 @@
-{# Detect presence of features that remove empty placeholders #}
+{% set featured_products = sections.primary.products | default([]) %}
+{% set category_icon_map = {
+    'Bebidas': 'glass-water',
+    'Golosinas': 'candy',
+    'Snacks': 'cookie',
+    'Tabaco': 'cigarette',
+    'Almacén': 'shopping-basket',
+    'Farmacia': 'pill'
+} %}
 
-{% set has_main_slider = settings.slider and settings.slider is not empty %}
-{% set has_mobile_slider = settings.toggle_slider_mobile and settings.slider_mobile and settings.slider_mobile is not empty %}
-{% set has_video = settings.video_embed %}
-{% set has_main_categories = settings.main_categories and settings.slider_categories and settings.slider_categories is not empty %}
-{% set has_banners = settings.banner and settings.banner is not empty %}
-{% set has_promotional_banners = settings.banner_promotional and settings.banner_promotional is not empty %}
-{% set has_news_banners = settings.banner_news and settings.banner_news is not empty %}
-{% set has_featured_banners =  settings.banner_01_show or settings.banner_02_show or settings.banner_03_show or settings.banner_04_show %}
-{% set has_image_and_text_module = settings.module and settings.module is not empty %}
-{% set has_brands = settings.brands and settings.brands is not empty %}
-{% set has_informative_banners = settings.banner_services and (settings.banner_services_01_title or settings.banner_services_02_title or settings.banner_services_03_title or settings.banner_services_01_description or settings.banner_services_02_description or settings.banner_services_03_description) %}
-{% set has_instafeed = settings.show_instafeed and store.instagram and store.hasInstagramToken() %}
-{% set has_institutional_message = settings.institutional_message or settings.institutional_text %}
-{% set has_welcome_message = settings.welcome_message or settings.welcome_text %}
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #fafafa;
+        color: #111;
+        overflow-x: hidden;
+    }
 
-{% set has_testimonial_01 = settings.testimonial_01_description or settings.testimonial_01_name or "testimonial_01.jpg" | has_custom_image %}
-{% set has_testimonial_02 = settings.testimonial_02_description or settings.testimonial_02_name or "testimonial_02.jpg" | has_custom_image %}
-{% set has_testimonial_03 = settings.testimonial_03_description or settings.testimonial_03_name or "testimonial_03.jpg" | has_custom_image %}
-{% set has_testimonials = has_testimonial_01 or has_testimonial_02 or has_testimonial_03 %}
 
-{% set show_help = not (has_main_slider or has_mobile_slider or has_video or has_main_categories or has_banners or has_promotional_banners or has_news_banners or has_image_and_text_module or has_brands or has_informative_banners or has_featured_banners or has_instafeed or has_testimonials or has_institutional_message or has_welcome_message) and not has_products %}
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
 
-{% set show_component_help = params.preview %}
+    .fade-in-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-{% set newArray = [] %}
-<div class="js-home-sections-container home-sections-container">
-	{% for i in 1..21 %}
-        {% set section = 'home_order_position_' ~ i %}
-        {% set section_select = attribute(settings, section) %}
+    .product-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        {% if section_select not in newArray %}
-            {% include 'snipplets/home/home-section-switch.tpl' %}
-            {% set newArray = newArray|merge([section_select]) %}
-        {% endif %}
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+    }
 
-    {% endfor %}
+    .btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
 
-    {#  **** Hidden Sections ****  #}
-    {% if show_component_help %}
-        <div style="display:none">
-            {% for section_select in ['slider', 'main_categories', 'welcome', 'institutional', 'products', 'informatives', 'categories', 'main_product', 'new', 'video', 'newsletter', 'sale', 'promotion', 'best_seller', 'instafeed', 'promotional', 'news_banners', 'featured_banners', 'brands' , 'testimonials', 'modules'] %}
-                {% if section_select not in newArray %}
-                    {% include 'snipplets/home/home-section-switch.tpl' %}
-                {% endif %}
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #333;
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+        z-index: -1;
+    }
+
+    .btn-primary:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+    .btn-primary:hover {
+        color: #fff;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #bbb;
+    }
+
+    #toast {
+        visibility: hidden;
+        min-width: 250px;
+        background-color: #111;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 16px;
+        position: fixed;
+        z-index: 100;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s, bottom 0.3s;
+    }
+
+    #toast.show {
+        visibility: visible;
+        opacity: 1;
+        bottom: 50px;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<header class="pt-32 pb-16 px-6 md:px-12 bg-white">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="fade-in-up">
+            <span class="inline-block py-1 px-3 border border-gray-200 rounded-full text-xs font-semibold tracking-widest uppercase text-gray-500 mb-6">Open 24/7</span>
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 mb-6 leading-[0.9]">
+                Tus antojos,<br>
+                <span class="text-gray-400">al instante.</span>
+            </h1>
+            <p class="text-lg text-gray-500 mb-8 max-w-md font-light">Desde chocolates importados hasta esenciales de farmacia. {{ store.name }} te lo lleva en minutos.</p>
+            <div class="flex gap-4">
+                <a href="{{ store.products_url }}" class="btn-primary bg-black text-white px-8 py-4 rounded-full text-sm font-bold tracking-widest z-10 inline-flex items-center">
+                    VER PRODUCTOS
+                </a>
+                <a href="{{ store.products_url }}" class="px-8 py-4 rounded-full text-sm font-bold tracking-widest border border-gray-200 hover:border-black transition-colors inline-flex items-center">
+                    OFERTAS
+                </a>
+            </div>
+        </div>
+        <div class="relative h-[400px] md:h-[500px] bg-gray-50 rounded-3xl overflow-hidden fade-in-up delay-200 group">
+            {% if settings.slider and settings.slider is not empty %}
+                {% set hero_slide = settings.slider | first %}
+                <img src="{{ hero_slide.image | static_url | settings_image_url('original') }}" alt="{{ hero_slide.title ?: store.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1621939514649-28b5fe2cb650?q=80&w=2000&auto=format&fit=crop" alt="Kiosco Moderno" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        </div>
+    </div>
+</header>
+
+<section class="py-16 px-6 bg-[#FAFAFA]">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-2xl font-bold mb-8 tracking-tight">Categorías</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {% for category in categories | slice(0, 6) %}
+                {% set icon_name = category_icon_map[category.name] | default('shopping-basket') %}
+                <a href="{{ category.url }}" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-black transition-all duration-300 cursor-pointer flex flex-col items-center justify-center gap-3 group">
+                    <div class="p-3 bg-gray-50 rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="{{ icon_name }}" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 group-hover:text-black">{{ category.name }}</span>
+                </a>
             {% endfor %}
         </div>
-    {% endif %}
-</div>
+    </div>
+</section>
 
-{% if settings.home_promotional_popup and ("home_popup_image.jpg" | has_custom_image or settings.home_popup_title or settings.home_popup_txt or settings.home_news_box or (settings.home_popup_btn and settings.home_popup_url)) %}
-	{% include 'snipplets/home/home-popup.tpl' %}
-{% endif %}
+<section class="py-20 px-6 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-12 fade-in-up">
+            <div>
+                <h2 class="text-3xl font-bold tracking-tight mb-2">Destacados</h2>
+                <p class="text-gray-500 text-sm">Lo mejor de la semana seleccionado para vos.</p>
+            </div>
+            <a href="{{ store.products_url }}" class="text-sm font-bold border-b-2 border-transparent hover:border-black transition-all pb-1">Ver todo</a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in featured_products | slice(0, 8) %}
+                <div class="product-card bg-white rounded-3xl p-4 border border-gray-100 cursor-pointer flex flex-col h-full fade-in-up">
+                    <div class="relative aspect-square mb-4 bg-gray-50 rounded-2xl overflow-hidden group">
+                        <a href="{{ product.url }}" class="absolute inset-0">
+                            <img src="{{ product.featured_image | product_image_url('large') }}" alt="{{ product.name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                        </a>
+                        {% if product.available and product.display_price %}
+                            <form class="js-product-form" method="post" action="{{ store.cart_url }}">
+                                <input type="hidden" name="add_to_cart" value="{{ product.id }}" />
+                                <button type="submit" data-product-name="{{ product.name }}" class="js-niceto-add absolute bottom-3 right-3 bg-black text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" aria-label="Agregar {{ product.name }}">
+                                    <i data-lucide="plus" class="w-5 h-5"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div class="mt-auto">
+                        {% if product.category %}
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{{ product.category.name }}</p>
+                        {% endif %}
+                        <h3 class="text-sm font-semibold text-gray-900 leading-tight mb-2 min-h-[40px]">
+                            <a href="{{ product.url }}" class="hover:underline">{{ product.name }}</a>
+                        </h3>
+                        {% if product.display_price %}
+                            <p class="text-base font-bold text-black">{{ product.price | money }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-20 px-6">
+    <div class="max-w-7xl mx-auto bg-black text-white rounded-[2rem] overflow-hidden relative fade-in-up">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full blur-[100px] opacity-50 pointer-events-none"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-12 md:p-20 items-center relative z-10">
+            <div>
+                <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">Trending</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6">Combo Cine en Casa</h2>
+                <p class="text-gray-400 text-lg mb-8 font-light">Llevate 2 Coca-Cola 1.5L + Lays Clásicas + Chocolate Block con un 20% OFF.</p>
+                <a href="{{ store.products_url }}" class="bg-white text-black px-8 py-3 rounded-full font-bold tracking-wide hover:bg-gray-200 transition-colors inline-flex items-center">
+                    VER COMBOS
+                </a>
+            </div>
+            <div class="flex justify-center">
+                <img src="https://images.unsplash.com/photo-1527960471264-932f39eb5846?q=80&w=1000&auto=format&fit=crop" alt="Snacks" class="rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 w-3/4 object-cover grayscale-[20%]">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 border-t border-gray-100 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <p class="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-10">Nuestros Partners</p>
+        <div class="flex flex-wrap justify-center gap-12 md:gap-20 opacity-40 grayscale">
+            {% if settings.brands and settings.brands is not empty %}
+                {% for brand in settings.brands | slice(0, 5) %}
+                    <span class="text-xl font-bold tracking-tighter">{{ brand.title }}</span>
+                {% endfor %}
+            {% else %}
+                <span class="text-xl font-bold tracking-tighter">COCA-COLA</span>
+                <span class="text-xl font-bold tracking-tighter">MILKA</span>
+                <span class="text-xl font-bold tracking-tighter">LAY'S</span>
+                <span class="text-xl font-bold tracking-tighter">FERNET BRANCA</span>
+                <span class="text-xl font-bold tracking-tighter">HEINEKEN</span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<div id="toast">Producto agregado al carrito</div>
+
+<script>
+    lucide.createIcons();
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = "show";
+        setTimeout(function () {
+            toast.className = toast.className.replace("show", "");
+        }, 3000);
+    }
+
+    document.querySelectorAll('.js-niceto-add').forEach((button) => {
+        button.addEventListener('click', () => {
+            const name = button.getAttribute('data-product-name');
+            if (name) {
+                showToast(`Agregaste ${name} al carrito`);
+            }
+        });
+    });
+
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+        observer.observe(el);
+    });
+
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            nav.classList.add('shadow-sm');
+            nav.classList.replace('py-4', 'py-3');
+        } else {
+            nav.classList.remove('shadow-sm');
+            nav.classList.replace('py-3', 'py-4');
+        }
+    });
+</script>
