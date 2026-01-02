@@ -657,11 +657,13 @@ button{
 
 .minimal-head {
   border-bottom: 1px solid var(--main-foreground-opacity-08, rgba(0,0,0,.08));
+  background: var(--header-background);
+  box-shadow: none;
 }
 
 .minimal-head-bar {
-  gap: 15px;
-  padding: 15px 0;
+  gap: 12px;
+  padding: 10px 0;
 }
 
 .minimal-head-bar .search-form {
@@ -669,15 +671,25 @@ button{
 }
 
 .minimal-head-bar .btn-utility {
-  padding: 8px;
+  padding: 6px;
 }
 
 .minimal-head-nav {
-  padding: 10px 0;
+  padding: 6px 0 8px;
 }
 
 .minimal-head-nav .nav-desktop {
   width: 100%;
+}
+
+@media (min-width: 768px) {
+  .minimal-head-bar {
+    padding: 12px 0;
+  }
+
+  .minimal-head-nav {
+    padding: 8px 0 10px;
+  }
 }
 
 /* // Nav */
@@ -984,7 +996,7 @@ footer {
 .footer-menu {
   &-item{
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
   &-link{
     display: block;
@@ -994,7 +1006,7 @@ footer {
 /* // Social */
 
 .social-footer {
-  padding: 35px 0;
+  padding: 20px 0;
 }
 
 .social-icon {
@@ -1007,7 +1019,7 @@ footer {
 /* // Legal */
 
 .footer-legal {
-  padding: 25px 0;
+  padding: 16px 0;
 }
 .footer-payments-shipping-logos img {
   width: auto;
