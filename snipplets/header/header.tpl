@@ -74,13 +74,6 @@
                 </div>
             {% endif %}
 
-            {# WhatsApp icon #}
-
-            {% if show_whatsapp_button %}
-                <div class="col-auto col-utility {% if settings.logo_position_mobile == 'left' %}order-1{% endif %} order-md-2">
-                    {% include "snipplets/header/header-utilities.tpl" with {use_whatsapp: true} %}
-                </div>
-            {% endif %}
 
             {# Logo #}
 
@@ -147,18 +140,10 @@
     {# Desktop navigation below logo #}
 
     <div class="js-menu-and-banners-row container-fluid menu-and-banners-row d-none d-md-block">
-        <div class="row">
-            {% if settings.category_item %}
-                {% include 'snipplets/navigation/navigation-categories.tpl' %}
-            {% endif %}
+        <div class="row align-items-center justify-content-between">
             <div class="js-desktop-nav-col col">
                 {% snipplet "navigation/navigation.tpl" %}
             </div>
-            {% if has_header_banners %}
-                <div class="js-head-banners-col col-md-auto">
-                    {% include "snipplets/header/header-banners.tpl" %}
-                </div>
-            {% endif %}
         </div>
     </div>
  
@@ -166,12 +151,6 @@
 </header>
 
 
-
-{% if has_header_banners %}
-    <div class="container-fluid {{ show_block_mobile_hide_desktop_class }}">
-        {% include "snipplets/header/header-banners.tpl" %}
-    </div>
-{% endif %}
 
 {# Show cookie validation message #}
 

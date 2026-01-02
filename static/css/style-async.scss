@@ -1088,8 +1088,29 @@ footer {
 /* // Brands */
 
 .section-brands-home,
-.section-categories-home {
+.section-categories-home,
+.section-home-welcome {
   padding: 20px 0;
+}
+
+.home-welcome-card {
+  background: var(--secondary-color, #fff);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.05);
+}
+
+.home-welcome-image {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  min-height: 240px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 }
 
 /* // Testimonials */
@@ -1816,7 +1837,10 @@ body.minimal-theme .form-control {
 body.minimal-theme .head-main {
   background: var(--minimal-bg);
   border-bottom: 1px solid var(--minimal-border);
-  box-shadow: none;
+  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.08);
+  border-radius: 0 0 32px 32px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.25rem;
 }
 
 body.minimal-theme .head-logo-row {
@@ -1832,17 +1856,20 @@ body.minimal-theme .menu-and-banners-row {
 
 body.minimal-theme .nav-desktop-list {
   display: flex;
-  gap: 1.25rem;
-  justify-content: center;
+  gap: 2rem;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 body.minimal-theme .nav-desktop-list .nav-list-link {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  text-transform: none;
+  letter-spacing: 0.02em;
   font-size: var(--font-small);
-  opacity: 0.75;
-  padding: 0.25rem 0;
+  font-weight: 600;
+  color: var(--minimal-muted);
+  padding: 0.35rem 0;
   position: relative;
+  transition: color 0.2s ease;
 }
 
 body.minimal-theme .nav-desktop-list .nav-list-link::after {
@@ -1850,21 +1877,23 @@ body.minimal-theme .nav-desktop-list .nav-list-link::after {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -0.35rem;
+  bottom: -0.2rem;
   height: 2px;
   background: currentColor;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 body.minimal-theme .nav-desktop-list .nav-list-link:hover,
 body.minimal-theme .nav-desktop-list .nav-list-link.selected {
-  opacity: 1;
+  color: var(--main-foreground);
 }
 
 body.minimal-theme .nav-desktop-list .nav-list-link:hover::after,
 body.minimal-theme .nav-desktop-list .nav-list-link.selected::after {
   opacity: 1;
+  transform: translateY(0);
 }
 
 body.minimal-theme .nav-secondary {
@@ -1876,13 +1905,13 @@ body.minimal-theme .nav-secondary {
 body.minimal-theme .nav-secondary-inner {
   max-width: 1140px;
   margin: 0 auto;
-  padding: 0.5rem 0;
+  padding: 0.35rem 0;
 }
 
 body.minimal-theme .nav-secondary-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  gap: 0.5rem 0.85rem;
   justify-content: center;
   padding-left: 0;
   list-style: none;
@@ -1891,17 +1920,52 @@ body.minimal-theme .nav-secondary-list {
 body.minimal-theme .nav-secondary-link {
   font-size: var(--font-smallest);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  padding: 0.3rem 0.95rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.9rem;
   border-radius: 999px;
   border: 1px solid transparent;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  color: var(--minimal-muted);
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 body.minimal-theme .nav-secondary-link:hover,
 body.minimal-theme .nav-secondary-link:focus {
   border-color: var(--minimal-border-strong);
-  background-color: rgba(15, 23, 42, 0.04);
+  background-color: rgba(15, 23, 42, 0.05);
+  color: var(--main-foreground);
+}
+
+body.minimal-theme .section-home-welcome {
+  padding: clamp(2rem, 4vw, 4rem) 0;
+}
+
+body.minimal-theme .home-welcome-card {
+  background: var(--minimal-surface);
+  border: 1px solid var(--minimal-border);
+  border-radius: 40px;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  box-shadow: 0 35px 80px rgba(15, 23, 42, 0.1);
+}
+
+body.minimal-theme .home-welcome-eyebrow {
+  letter-spacing: 0.3em;
+  opacity: 0.5;
+}
+
+body.minimal-theme .home-welcome-title {
+  letter-spacing: -0.03em;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 1rem;
+}
+
+body.minimal-theme .home-welcome-text {
+  opacity: 0.72;
+}
+
+body.minimal-theme .home-welcome-image {
+  border-radius: 32px;
+  background: rgba(15, 23, 42, 0.05);
+  min-height: 320px;
 }
 
 body.minimal-theme .section-slider-home {
@@ -1973,6 +2037,47 @@ body.minimal-theme .section-newsletter-home .input-append {
   align-items: center;
 }
 
+body.minimal-theme .section-featured-home {
+  padding: clamp(2rem, 4vw, 4rem) 0;
+}
+
+body.minimal-theme .section-featured-home .js-item-product {
+  display: flex;
+}
+
+body.minimal-theme .section-featured-home .js-item-product .item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+body.minimal-theme .section-featured-home .item-description {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+body.minimal-theme .section-featured-home .item-price-container {
+  margin-top: auto;
+}
+
+body.minimal-theme .section-brands-home {
+  padding: clamp(2rem, 4vw, 3rem) 0;
+  background: transparent;
+}
+
+body.minimal-theme .section-brands-home .home-circle-image {
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.05);
+  border: none;
+  width: 90px;
+  height: 90px;
+}
+
+body.minimal-theme .section-brands-home .swiper-container {
+  padding: 0 1.5rem;
+}
+
 body.minimal-theme .item-product .item {
   border: 1px solid var(--minimal-border);
   border-radius: 28px;
@@ -2019,4 +2124,71 @@ body.minimal-theme .footer {
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   padding-top: clamp(2rem, 4vw, 3.5rem);
+  background: var(--minimal-surface);
+  border: 1px solid var(--minimal-border);
+  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.08);
+}
+
+body.minimal-theme .floating-whatsapp {
+  position: fixed;
+  right: 24px;
+  bottom: 28px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #06d6a0, #0fb981);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 20px 35px rgba(6, 214, 160, 0.35);
+}
+
+body.minimal-theme .floating-whatsapp-icon {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+body.minimal-theme .floating-whatsapp-label {
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+body.minimal-theme .floating-whatsapp-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  animation: floatingWhatsappPulse 2.4s ease infinite;
+}
+
+@media (max-width: 640px) {
+  body.minimal-theme .floating-whatsapp {
+    right: 16px;
+    bottom: 20px;
+    padding: 0.75rem;
+  }
+
+  body.minimal-theme .floating-whatsapp-label {
+    display: none;
+  }
+}
+
+@keyframes floatingWhatsappPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
 }

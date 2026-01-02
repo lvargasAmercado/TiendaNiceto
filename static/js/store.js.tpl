@@ -1174,6 +1174,11 @@ DOMContentLoaded.addEventOrExecute(() => {
                 centerInsufficientSlides: true,
                 threshold: 5,
                 slidesPerView: 4,
+                loop: true,
+                autoplay: {
+                    delay: 2200,
+                    disableOnInteraction: false,
+                },
                 navigation: {
                     nextEl: '.js-swiper-brands-next',
                     prevEl: '.js-swiper-brands-prev',

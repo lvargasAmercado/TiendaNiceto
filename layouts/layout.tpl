@@ -121,12 +121,6 @@
 
         {% snipplet "grid/quick-shop.tpl" %}
 
-        {# WhatsApp chat button #}
-
-        {% if not settings.whatsapp_header_link %}
-            {% snipplet "whatsapp-chat.tpl" %}
-        {% endif %}
-
         {# Footer #}
 
         {% snipplet "footer/footer.tpl" %}
@@ -194,5 +188,7 @@
                 });
             </script>
         {% endif %}
+
+        {% include "snipplets/whatsapp-floating.tpl" %}
     </body>
 </html>
