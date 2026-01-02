@@ -951,6 +951,13 @@ DOMContentLoaded.addEventOrExecute(() => {
             var lazyVal = true;
             var watchOverflowVal = true;
             var centerInsufficientSlidesVal = true;
+            var productSliderAutoplay = function() {
+                return {
+                    delay: 4200,
+                    disableOnInteraction: false,
+                };
+            };
+            var productSliderSpeed = 700;
 
             {% if has_featured_products_slider or theme_editor %}
 
@@ -972,6 +979,8 @@ DOMContentLoaded.addEventOrExecute(() => {
                 {% if sections.primary.products | length > 4 %}
                     loop: true,
                 {% endif %}
+                    speed: productSliderSpeed,
+                    autoplay: productSliderAutoplay(),
                     navigation: {
                         nextEl: '.js-swiper-featured-next',
                         prevEl: '.js-swiper-featured-prev',
@@ -1014,6 +1023,8 @@ DOMContentLoaded.addEventOrExecute(() => {
                 {% if sections.new.products | length > 4 %}
                     loop: true,
                 {% endif %}
+                    speed: productSliderSpeed,
+                    autoplay: productSliderAutoplay(),
                     navigation: {
                         nextEl: '.js-swiper-new-next',
                         prevEl: '.js-swiper-new-prev',
@@ -1056,6 +1067,8 @@ DOMContentLoaded.addEventOrExecute(() => {
                 {% if sections.sale.products | length > 4 %}
                     loop: true,
                 {% endif %}
+                    speed: productSliderSpeed,
+                    autoplay: productSliderAutoplay(),
                     navigation: {
                         nextEl: '.js-swiper-sale-next',
                         prevEl: '.js-swiper-sale-prev',
@@ -1098,6 +1111,8 @@ DOMContentLoaded.addEventOrExecute(() => {
                 {% if sections.promotion.products | length > 4 %}
                     loop: true,
                 {% endif %}
+                    speed: productSliderSpeed,
+                    autoplay: productSliderAutoplay(),
                     navigation: {
                         nextEl: '.js-swiper-promotion-next',
                         prevEl: '.js-swiper-promotion-prev',
@@ -1140,6 +1155,8 @@ DOMContentLoaded.addEventOrExecute(() => {
                 {% if sections.best_seller.products | length > 4 %}
                     loop: true,
                 {% endif %}
+                    speed: productSliderSpeed,
+                    autoplay: productSliderAutoplay(),
                     navigation: {
                         nextEl: '.js-swiper-best-seller-next',
                         prevEl: '.js-swiper-best-seller-prev',

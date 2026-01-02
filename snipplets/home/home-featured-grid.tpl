@@ -93,7 +93,7 @@
 {% set image_desktop = section_image_desktop | has_custom_image %}
 {% set image_mobile = section_image_mobile | has_custom_image %}
 
-<div class="js-products-{{ section_id }}-container container" data-image-desktop="{{ image_desktop ? 'true' : 'false' }}" data-image-mobile="{{ image_mobile ? 'true' : 'false' }}" data-item-color-variants="{{ settings.product_color_variants ? 'true' : 'false' }}" data-item-stock="{{ settings.product_item_stock ? 'true' : 'false' }}" data-item-quickshop="{{ settings.quick_shop ? 'true' : 'false' }}">
+<div class="js-products-{{ section_id }}-container container home-products-carousel" data-image-desktop="{{ image_desktop ? 'true' : 'false' }}" data-image-mobile="{{ image_mobile ? 'true' : 'false' }}" data-item-color-variants="{{ settings.product_color_variants ? 'true' : 'false' }}" data-item-stock="{{ settings.product_item_stock ? 'true' : 'false' }}" data-item-quickshop="{{ settings.quick_shop ? 'true' : 'false' }}">
     <div class="row">
         <div class="js-products-{{ section_id }}-horizontal-title-col col-{% if section_horizontal_item == true %}md-2{% else %}12{% endif %}{% if use_slider and not section_horizontal_item == true %} pr-0 pr-md-3{% endif %}">
             <h2 class="js-products-{{ section_id }}-title section-title h3 mb-3{% if section_horizontal_item == true %} mt-md-3{% endif %}" {% if not section_title %}style="display: none;"{% endif %}>{{ section_title }}</h2>
@@ -102,7 +102,7 @@
         <div class="js-products-{{ section_id }}-horizontal-content-col col-md-10{% if use_slider %} pr-0 pr-md-3{% endif %}">
         {% endif %}
             {% if use_slider %}
-                <div class="js-swiper-{{ section_id }} swiper-container p-1">
+                <div class="js-swiper-{{ section_id }} swiper-container">
             {% endif %}
                     <div class="js-products-{{ section_id }}-grid {% if use_slider %}swiper-wrapper{% else %}row row-grid{% endif %}" data-desktop-columns="{{ section_columns_desktop }}" data-mobile-columns="{{ section_columns_mobile }}" data-mobile-slider-columns="{{ section_columns_slider_mobile }}" data-format="{{ section_format }}" data-horizontal-item="{{ section_horizontal_item }}">
                         {% for product in sections_products %}
@@ -115,8 +115,8 @@
                     </div>
             {% if use_slider %}
                 </div>
-                <div class="js-swiper-{{ section_id }}-prev swiper-button-prev swiper-button-outside d-none d-md-block svg-icon-text">{% include "snipplets/svg/chevron-left.tpl" with {svg_custom_class: "icon-inline icon-lg"} %}</div>
-                <div class="js-swiper-{{ section_id }}-next swiper-button-next swiper-button-outside d-none d-md-block svg-icon-text">{% include "snipplets/svg/chevron-right.tpl" with {svg_custom_class: "icon-inline icon-lg"} %}</div>
+                <button type="button" class="js-swiper-{{ section_id }}-prev swiper-button-prev swiper-button-outside d-none d-md-flex align-items-center justify-content-center swiper-button-minimal" aria-label="{{ 'Anterior' | translate }}">{% include "snipplets/svg/chevron-left.tpl" with {svg_custom_class: "icon-inline icon-lg"} %}</button>
+                <button type="button" class="js-swiper-{{ section_id }}-next swiper-button-next swiper-button-outside d-none d-md-flex align-items-center justify-content-center swiper-button-minimal" aria-label="{{ 'Siguiente' | translate }}">{% include "snipplets/svg/chevron-right.tpl" with {svg_custom_class: "icon-inline icon-lg"} %}</button>
             {% endif %}
         </div>
     </div>
