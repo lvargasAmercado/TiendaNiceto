@@ -1889,6 +1889,11 @@ header.head-main.compress .logo-img-big {
   flex-direction: column;
   height: 100%;
 }
+.item-product .item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .item-image {
   position: relative;
   max-height: 1200px;
