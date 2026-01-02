@@ -73,6 +73,69 @@
                 background-color: #fafafa;
                 color: #111;
             }
+
+            .fade-in-up {
+                animation: fadeInUp 0.6s ease-out forwards;
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .product-card {
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .product-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08);
+            }
+
+            .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .hide-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            #toast {
+                visibility: hidden;
+                min-width: 250px;
+                background-color: #111;
+                color: #fff;
+                text-align: center;
+                border-radius: 9999px;
+                padding: 12px 24px;
+                position: fixed;
+                z-index: 100;
+                left: 50%;
+                bottom: 30px;
+                transform: translateX(-50%) translateY(20px);
+                font-size: 13px;
+                font-weight: 500;
+                opacity: 0;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+
+            #toast.show {
+                visibility: visible;
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .filter-btn.active {
+                background-color: #111;
+                color: #fff;
+                border-color: #111;
+            }
         </style>
 
         {#/*============================================================================
