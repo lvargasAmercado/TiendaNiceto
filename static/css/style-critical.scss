@@ -1882,6 +1882,12 @@ header.head-main.compress .logo-img-big {
 .item-product {
   position: relative;
   z-index: 9;
+  display: flex;
+}
+.item-product .item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .item-product .item {
   display: flex;
@@ -1970,6 +1976,12 @@ header.head-main.compress .logo-img-big {
 }
 .item-description {
   padding: 10px;
+}
+.item-description .item-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
 }
 .item-product .item-description {
   display: flex;

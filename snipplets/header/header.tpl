@@ -14,8 +14,17 @@
 			<div class="col-auto d-md-none">
 				{% include "snipplets/header/header-utilities.tpl" with {use_menu: true} %}
 			</div>
-			<div class="col">
+			<div class="col-auto d-none d-md-flex align-items-center header-logo-wrapper">
+				{{ component('logos/logo', {logo_size: 'medium', logo_img_classes: 'logo-img transition-soft', logo_text_classes: 'logo-text h4 m-0'}) }}
+			</div>
+			<div class="col text-center d-md-none header-logo-wrapper">
+				{{ component('logos/logo', {logo_size: 'medium', logo_img_classes: 'logo-img transition-soft', logo_text_classes: 'logo-text h4 m-0'}) }}
+			</div>
+			<div class="col d-none d-md-block header-search">
 				{% include "snipplets/header/header-search.tpl" %}
+			</div>
+			<div class="col-auto d-md-none">
+				{% include "snipplets/header/header-utilities.tpl" with {use_search: true} %}
 			</div>
 			<div class="col-auto d-none d-md-flex align-items-center">
 				{% include "snipplets/header/header-utilities.tpl" with {use_account: true, icon_only: true} %}
@@ -26,7 +35,7 @@
 		</div>
 	</div>
 
-	<nav class="minimal-head-nav container-fluid">
+	<nav class="minimal-head-nav container-fluid d-none d-md-block">
 		{% snipplet "navigation/navigation.tpl" %}
 	</nav>
 

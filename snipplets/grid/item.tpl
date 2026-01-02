@@ -176,7 +176,8 @@
                     {% if not reduced_item %}
                         {% include 'snipplets/labels.tpl' %}
                     {% endif %}
-                    {% if product.display_price %}
+                    {% set show_item_price = product.display_price and product.price > 0 %}
+                    {% if show_item_price %}
                         <div class="item-price-container" data-store="product-item-price-{{ product.id }}">
                             <span class="js-price-display item-price mr-1 {% if reduced_item %}font-body{% endif %} font-weight-bold" data-product-price="{{ product.price }}">
                                 {{ product.price | money }}

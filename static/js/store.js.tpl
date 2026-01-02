@@ -1168,15 +1168,26 @@ DOMContentLoaded.addEventOrExecute(() => {
 
         {% if settings.brands and settings.brands is not empty %}
 
+            var brandsSwiperElement = document.querySelector('.js-swiper-brands');
+            var brandsAutoplayDelay = brandsSwiperElement ? parseInt(brandsSwiperElement.dataset.brandsAutoplay, 10) || 2600 : 2600;
+            var brandsAutoplaySpeed = brandsSwiperElement ? parseInt(brandsSwiperElement.dataset.brandsSpeed, 10) || 600 : 600;
+            var brandsGap = brandsSwiperElement ? parseInt(brandsSwiperElement.dataset.brandsGap, 10) || 24 : 24;
+            var brandsSlidesMobile = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsMobile) || 2.2 : 2.2;
+            var brandsSlidesTablet = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsTablet) || 4 : 4;
+            var brandsSlidesDesktop = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsDesktop) || 6 : 6;
+            var brandsSlidesWide = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsWide) || 8 : 8;
+
             createSwiper('.js-swiper-brands', {
                 lazy: true,
                 watchOverflow: true,
                 centerInsufficientSlides: true,
                 threshold: 5,
-                slidesPerView: 4,
+                slidesPerView: brandsSlidesMobile,
+                spaceBetween: brandsGap,
+                speed: brandsAutoplaySpeed,
                 loop: true,
                 autoplay: {
-                    delay: 2200,
+                    delay: brandsAutoplayDelay,
                     disableOnInteraction: false,
                 },
                 navigation: {
@@ -1187,18 +1198,32 @@ DOMContentLoaded.addEventOrExecute(() => {
                     afterInit: function () {
                         hideSwiperControls(".js-swiper-brands-prev", ".js-swiper-brands-next");
                     },
-                    {% if settings.brands | length > 3 and settings.brands | length < 6  %}
-                        beforeInit: function () {
-                            if (window.innerWidth > 768) {
-                                jQueryNuvem(".js-swiper-brands-wrapper").addClass("justify-content-center");
-                            }
-                        },
-                    {% endif %}
                 },
                 breakpoints: {
+                    480: {
+                        slidesPerView: brandsSlidesTablet,
+                    },
                     768: {
-                        slidesPerView: 10,
+                        slidesPerView: brandsSlidesDesktop,
+                    },
+                    1024: {
+                        slidesPerView: brandsSlidesWide,
                     }
+                }
+            },
+            function(swiperInstance) {
+                var brandsSlider = document.querySelector('.js-swiper-brands');
+                if (brandsSlider) {
+                    brandsSlider.addEventListener('mouseenter', function() {
+                        if (swiperInstance.autoplay) {
+                            swiperInstance.autoplay.stop();
+                        }
+                    });
+                    brandsSlider.addEventListener('mouseleave', function() {
+                        if (swiperInstance.autoplay) {
+                            swiperInstance.autoplay.start();
+                        }
+                    });
                 }
             });
 
@@ -1210,14 +1235,26 @@ DOMContentLoaded.addEventOrExecute(() => {
             watchOverflow: true,
             centerInsufficientSlides: true,
             threshold: 5,
-            slidesPerView: 4,
+            slidesPerView: 2.2,
+            spaceBetween: 24,
+            speed: 600,
+            autoplay: {
+                delay: 2600,
+                disableOnInteraction: false,
+            },
             navigation: {
                 nextEl: '.js-swiper-brands-next-demo',
                 prevEl: '.js-swiper-brands-prev-demo',
             },
             breakpoints: {
+                480: {
+                    slidesPerView: 4,
+                },
                 768: {
-                    slidesPerView: 10,
+                    slidesPerView: 6,
+                },
+                1024: {
+                    slidesPerView: 8,
                 }
             }
         });
