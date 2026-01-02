@@ -3,14 +3,17 @@
     <head>
         <link rel="preconnect" href="{{ store_resource_hints }}" />
         <link rel="dns-prefetch" href="{{ store_resource_hints }}" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{{ page_title }}</title>
         <meta name="description" content="{{ page_description }}" />
         <link rel="preload" as="style" href="{{ [settings.font_headings, settings.font_rest] | google_fonts_url('400,700') }}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
         <link rel="preload" href="{{ 'css/style-critical.scss' | static_url }}" as="style" />
         <link rel="preload" href="{{ 'css/style-colors.scss' | static_url }}" as="style" />
 
@@ -56,6 +59,21 @@
         <style>
             {{ settings.css_code | raw }}
         </style>
+        <style>
+            .template-content {
+                padding-top: 6.5rem;
+            }
+
+            .template-home .template-content {
+                padding-top: 0;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #fafafa;
+                color: #111;
+            }
+        </style>
 
         {#/*============================================================================
             #Javascript: Needed before HTML loads
@@ -90,7 +108,7 @@
     {% if customer %}
         {% set body_classes = body_classes | merge(['customer-logged-in']) %}
     {% endif %}
-    <body class="{{ body_classes | join(' ') }}">
+    <body class="{{ body_classes | join(' ') }} antialiased">
         {# Facebook comments on product page #}
 
         {% if template == 'product' %}
@@ -115,7 +133,9 @@
 
         {# Page content #}
 
-        {% template_content %}
+        <main class="template-content">
+            {% template_content %}
+        </main>
 
         {# Quickshop modal #}
 
@@ -190,5 +210,10 @@
         {% endif %}
 
         {% include "snipplets/whatsapp-floating.tpl" %}
+        <script>
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+            }
+        </script>
     </body>
 </html>
