@@ -28,17 +28,18 @@
   {% set adbar_background = settings.adbar_colors ? settings.adbar_background_color : main_background %}
   {% set adbar_foreground = settings.adbar_colors ? settings.adbar_foreground_color : main_foreground %}
 
-  {% set header_background = '#E67E22' %}
+  {% set header_background = settings.header_colors ? settings.header_background_color : '#F9F7F3' %}
   {% set header_foreground = settings.header_colors ? settings.header_foreground_color : main_foreground %}
   {% set header_badge_background = settings.header_colors ? settings.header_badge_background_color : main_background %}
   {% set header_badge_foreground = settings.header_colors ? settings.header_badge_foreground_color : main_foreground %}
 
   {% if settings.desktop_nav_colors %}
+    {% set nav_desktop_background = settings.desktop_nav_background_color %}
     {% set nav_desktop_foreground = settings.desktop_nav_foreground_color %}
   {% else %}
+    {% set nav_desktop_background = header_background %}
     {% set nav_desktop_foreground = settings.header_colors ? settings.header_foreground_color : main_foreground %}
   {% endif %}
-  {% set nav_desktop_background = header_background %}
 
   {% set footer_background = settings.footer_colors ? settings.footer_background_color : main_background %}
   {% set footer_foreground = settings.footer_colors ? settings.footer_foreground_color : main_foreground %}
