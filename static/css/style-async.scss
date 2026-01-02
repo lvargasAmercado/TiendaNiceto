@@ -775,6 +775,7 @@ button{
 }
 
 .minimal-head-nav {
+  background: var(--header-background);
   padding: 8px 0 14px;
 }
 
@@ -2190,7 +2191,7 @@ body.minimal-theme .form-control {
 }
 
 body.minimal-theme .head-main {
-  background: var(--minimal-bg);
+  background: var(--header-background);
   border-bottom: 1px solid var(--minimal-border);
   box-shadow: none;
   border-radius: 0;
