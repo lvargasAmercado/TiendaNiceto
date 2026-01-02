@@ -655,6 +655,31 @@ button{
   }
 }
 
+.minimal-head {
+  border-bottom: 1px solid var(--main-foreground-opacity-08, rgba(0,0,0,.08));
+}
+
+.minimal-head-bar {
+  gap: 15px;
+  padding: 15px 0;
+}
+
+.minimal-head-bar .search-form {
+  width: 100%;
+}
+
+.minimal-head-bar .btn-utility {
+  padding: 8px;
+}
+
+.minimal-head-nav {
+  padding: 10px 0;
+}
+
+.minimal-head-nav .nav-desktop {
+  width: 100%;
+}
+
 /* // Nav */
 
 .modal-full-width {
