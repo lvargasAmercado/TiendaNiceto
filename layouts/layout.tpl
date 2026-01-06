@@ -193,6 +193,7 @@
         {# Header = Advertising + Nav + Logo + Search + Ajax Cart #}
 
         {% snipplet "header/header.tpl" %}
+        {% snipplet "header/header-modals.tpl" %}
 
         {# Page content #}
 
