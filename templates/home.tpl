@@ -113,7 +113,6 @@
 <header class="pt-32 pb-16 px-6 md:px-12 bg-white">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div class="fade-in-up">
-            <span class="inline-block py-1 px-3 border border-gray-200 rounded-full text-xs font-semibold tracking-widest uppercase text-gray-500 mb-6">Open 24/7</span>
             <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 mb-6 leading-[0.9]">
                 Tus antojos,<br>
                 <span class="text-gray-400">al instante.</span>
