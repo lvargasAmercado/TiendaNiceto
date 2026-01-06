@@ -200,7 +200,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-12 md:p-20 items-center relative z-10">
             <div>
                 <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">Trending</span>
-                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6">Combo Cine en Casa</h2>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 !text-white">Combo Cine en Casa</h2>
                 <p class="text-gray-400 text-lg mb-8 font-light">Llevate 2 Coca-Cola 1.5L + Lays Clásicas + Chocolate Block con un 20% OFF.</p>
                 <a href="{{ store.products_url }}" class="bg-white text-black px-8 py-3 rounded-full font-bold tracking-wide hover:bg-gray-200 transition-colors inline-flex items-center">
                     VER COMBOS
