@@ -128,7 +128,7 @@
             </div>
         </div>
         <div class="relative h-[400px] md:h-[500px] bg-gray-50 rounded-3xl overflow-hidden fade-in-up delay-200 group">
-            <img src="{{ 'static/images/TendaNiceto_1080x1080px.jpg' | static_url }}" alt="{{ store.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <img src="{{ 'images/TendaNiceto_1080x1080px.jpg' | static_url }}" alt="{{ store.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         </div>
     </div>
