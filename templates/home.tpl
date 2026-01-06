@@ -216,19 +216,44 @@
 <section class="py-16 border-t border-gray-100 bg-white">
     <div class="max-w-7xl mx-auto px-6">
         <p class="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-10">Nuestros Partners</p>
-        <div class="flex flex-wrap justify-center gap-12 md:gap-20 opacity-40 grayscale">
-            {% if settings.brands and settings.brands is not empty %}
-                {% for brand in settings.brands | slice(0, 5) %}
-                    <span class="text-xl font-bold tracking-tighter">{{ brand.title }}</span>
-                {% endfor %}
-            {% else %}
+        {% if settings.brands and settings.brands is not empty %}
+            <div class="relative">
+                <div class="js-swiper-brands swiper-container py-4" data-brands-autoplay="2200" data-brands-speed="650" data-brands-gap="28" data-brands-mobile="2.6" data-brands-tablet="4" data-brands-desktop="5" data-brands-wide="6">
+                    <div class="swiper-wrapper items-center">
+                        {% for brand in settings.brands %}
+                            {% set brand_title = brand.title | default('Partner #' ~ loop.index) %}
+                            <div class="swiper-slide flex justify-center">
+                                <div class="w-28 h-28 rounded-full border border-gray-200 shadow-sm bg-white/80 flex items-center justify-center overflow-hidden">
+                                    {% if brand.image %}
+                                        <img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ brand.image | static_url | settings_image_url('large') }}" class="lazyload w-16 h-16 object-contain" alt="{{ brand_title }}">
+                                    {% else %}
+                                        <span class="text-xs font-semibold text-gray-600 text-center px-3 leading-tight">{{ brand_title }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="hidden md:flex absolute inset-y-0 left-0 items-center pointer-events-none">
+                    <button type="button" class="js-swiper-brands-prev pointer-events-auto w-10 h-10 rounded-full bg-white border border-gray-200 shadow text-gray-700 flex items-center justify-center">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="hidden md:flex absolute inset-y-0 right-0 items-center pointer-events-none">
+                    <button type="button" class="js-swiper-brands-next pointer-events-auto w-10 h-10 rounded-full bg-white border border-gray-200 shadow text-gray-700 flex items-center justify-center">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        {% else %}
+            <div class="flex flex-wrap justify-center gap-12 md:gap-20 opacity-40 grayscale">
                 <span class="text-xl font-bold tracking-tighter">COCA-COLA</span>
                 <span class="text-xl font-bold tracking-tighter">MILKA</span>
                 <span class="text-xl font-bold tracking-tighter">LAY'S</span>
                 <span class="text-xl font-bold tracking-tighter">FERNET BRANCA</span>
                 <span class="text-xl font-bold tracking-tighter">HEINEKEN</span>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </div>
 </section>
 

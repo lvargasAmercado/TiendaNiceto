@@ -1229,19 +1229,7 @@ DOMContentLoaded.addEventOrExecute(() => {
                 }
             },
             function(swiperInstance) {
-                var brandsSlider = document.querySelector('.js-swiper-brands');
-                if (brandsSlider) {
-                    brandsSlider.addEventListener('mouseenter', function() {
-                        if (swiperInstance.autoplay) {
-                            swiperInstance.autoplay.stop();
-                        }
-                    });
-                    brandsSlider.addEventListener('mouseleave', function() {
-                        if (swiperInstance.autoplay) {
-                            swiperInstance.autoplay.start();
-                        }
-                    });
-                }
+                window.brandsSwiper = swiperInstance;
             });
 
         {% endif %}
