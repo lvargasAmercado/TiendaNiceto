@@ -128,12 +128,7 @@
             </div>
         </div>
         <div class="relative h-[400px] md:h-[500px] bg-gray-50 rounded-3xl overflow-hidden fade-in-up delay-200 group">
-            {% if settings.slider and settings.slider is not empty %}
-                {% set hero_slide = settings.slider | first %}
-                <img src="{{ hero_slide.image | static_url | settings_image_url('original') }}" alt="{{ hero_slide.title ?: store.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-            {% else %}
-                <img src="https://images.unsplash.com/photo-1621939514649-28b5fe2cb650?q=80&w=2000&auto=format&fit=crop" alt="Kiosco Moderno" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-            {% endif %}
+            <img src="{{ 'static/images/TendaNiceto_1080x1080px.jpg' | static_url }}" alt="{{ store.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         </div>
     </div>
