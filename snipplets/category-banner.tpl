@@ -20,7 +20,7 @@
         <div class="h-100 d-flex justify-content-center align-items-center">
             <div class="container px-0 p-md-3">
                 {% embed "snipplets/page-header.tpl" with {breadcrumbs: false, container: false, padding: false, page_header_class: 'text-uppercase'} %}
-                        {% block page_header_text %}{{ category.name }}{% endblock page_header_text %}
+                        
                     {% endembed %}
                 {% if category.description %}
                     <p class="mt-2 mb-0">{{ category.description }}</p>

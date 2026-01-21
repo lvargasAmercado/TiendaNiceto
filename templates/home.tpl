@@ -1,21 +1,289 @@
 {% set featured_products = sections.primary.products | default([]) %}
-{% set category_icon_map = {
-    'Bebidas': 'glass-water',
-    'Golosinas': 'candy',
-    'Snacks': 'cookie',
-    'Tabaco': 'cigarette',
-    'Almacén': 'shopping-basket',
-    'Farmacia': 'pill'
-} %}
+{% set sale_products = sections.sale.products | default([]) %}
+{% set new_products = sections.new.products | default([]) %}
+{% set hero_slide = settings.slider and settings.slider is not empty ? (settings.slider | first) : null %}
+{% set hero_title = hero_slide and hero_slide.title ? hero_slide.title : null %}
+{% set hero_description = hero_slide and hero_slide.description ? hero_slide.description : null %}
+{% set hero_button = hero_slide and hero_slide.button ? hero_slide.button : null %}
+{% set hero_link = hero_slide and hero_slide.link ? hero_slide.link | setting_url : store.products_url %}
+{% set hero_button_text = hero_button ? hero_button : 'VER PRODUCTOS' %}
+{% set categories_title = settings.main_categories_title | default('Categorías principales') %}
+{% set hero_image_url = 'images/TendaNiceto_1580x700px.jpg' | static_url %}
+{% set combos_handle = 'combos' %}
+{% set combos_category = null %}
+{% for category in categories %}
+    {% if category.handle == combos_handle or category.name | lower == 'combos' %}
+        {% set combos_category = category %}
+    {% endif %}
+{% endfor %}
+{% set combos_products = [] %}
+{% if combos_category and combos_category.products is not empty %}
+    {% set combos_products = combos_category.products %}
+{% elseif sections.promotion.products %}
+    {% for product in sections.promotion.products %}
+        {% if product.category and (product.category.handle == combos_handle or product.category.name | lower == 'combos') %}
+            {% set combos_products = combos_products | merge([product]) %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% set combos_url = combos_category ? combos_category.url : store.products_url %}
+{% set combos_title = combos_category ? combos_category.name : 'Combos' %}
 
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #fafafa;
-        color: #111;
-        overflow-x: hidden;
+    .niceto-hero-card {
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        border-radius: 32px;
+        min-height: 360px;
+        background: #fff;
+        border: 1px solid #f1f1f1;
+        color: var(--niceto-ink);
+        box-shadow: var(--niceto-shadow);
     }
 
+    .niceto-hero-media {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .niceto-hero-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.5;
+        filter: saturate(1.05);
+    }
+
+    .niceto-hero-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background: linear-gradient(120deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.72) 50%, rgba(255, 255, 255, 0.6) 100%);
+    }
+
+    .niceto-hero-content {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        gap: 2rem;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    .niceto-hero-logo-blur {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.12;
+        filter: blur(14px);
+        transform: scale(1.15);
+        pointer-events: none;
+    }
+
+    .niceto-hero-logo-blur a {
+        pointer-events: none;
+    }
+
+    .niceto-hero-logo-img {
+        max-width: 70%;
+        height: auto;
+    }
+
+    .niceto-hero-logo-text {
+        font-size: clamp(2.5rem, 10vw, 5.5rem);
+        font-weight: 700;
+        color: rgba(17, 17, 17, 0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .niceto-hero-glow {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+            radial-gradient(circle at 20% 0%, rgba(230, 126, 34, 0.12), transparent 55%),
+            radial-gradient(circle at 85% 10%, rgba(0, 0, 0, 0.04), transparent 60%);
+        pointer-events: none;
+    }
+
+    .niceto-kicker {
+        font-size: 0.65rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--niceto-orange);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .niceto-kicker::before {
+        content: "";
+        width: 14px;
+        height: 2px;
+        background: var(--niceto-orange);
+        border-radius: 999px;
+    }
+
+    .niceto-kicker--dark {
+        color: var(--niceto-orange);
+    }
+
+    .niceto-kicker--dark::before {
+        background: var(--niceto-orange);
+    }
+
+    .niceto-muted {
+        color: rgba(17, 17, 17, 0.6);
+    }
+
+    .niceto-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.9rem 1.8rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .niceto-btn--primary {
+        background: var(--niceto-orange);
+        color: #fff;
+    }
+
+    .niceto-btn--primary:hover {
+        background: var(--niceto-orange-deep);
+        transform: translateY(-1px);
+    }
+
+    .niceto-btn--ghost {
+        border: 1px solid #d9d9d9;
+        color: #111;
+        background: transparent;
+    }
+
+    .niceto-btn--ghost:hover {
+        background: #111;
+        border-color: #111;
+        color: #fff;
+    }
+
+    .niceto-link {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+        color: var(--niceto-ink);
+        border-bottom: 2px solid transparent;
+        padding-bottom: 4px;
+        transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .niceto-link:hover {
+        color: var(--niceto-orange-deep);
+        border-color: var(--niceto-orange);
+    }
+
+    .niceto-category-card {
+        background: #fff;
+        border-radius: 22px;
+        border: 1px solid #f1f1f1;
+        padding: 1.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .niceto-category-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--niceto-orange);
+        box-shadow: 0 18px 30px rgba(18, 10, 6, 0.12);
+    }
+
+    .niceto-category-image {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: #f5f5f5;
+        border: 1px solid #eeeeee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .niceto-category-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .niceto-category-card:hover .niceto-category-image {
+        border-color: var(--niceto-orange);
+        transform: scale(1.03);
+    }
+
+    .niceto-product-card {
+        background: #fff;
+        border-radius: 26px;
+        border: 1px solid #f1f1f1;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .niceto-product-card:hover {
+        border-color: rgba(17, 17, 17, 0.2);
+    }
+
+    .niceto-eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+        color: rgba(17, 17, 17, 0.45);
+    }
+
+    .niceto-add-btn {
+        background: var(--niceto-ink);
+        color: #fff;
+    }
+
+    .niceto-add-btn:hover {
+        background: var(--niceto-orange);
+    }
+
+    .niceto-hero-info {
+        background: #ffffff;
+        border: 1px solid #ededed;
+        border-radius: 18px;
+        padding: 1rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .niceto-hero-info span {
+        font-size: 0.75rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(17, 17, 17, 0.6);
+        font-weight: 600;
+    }
+
+    .niceto-hero-info p {
+        margin: 0;
+        line-height: 1.2;
+    }
 
     .fade-in-up {
         opacity: 0;
@@ -37,35 +305,6 @@
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
     }
 
-    .btn-primary {
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #333;
-        transform: scaleX(0);
-        transform-origin: bottom right;
-        transition: transform 0.3s ease-out;
-        z-index: -1;
-    }
-
-    .btn-primary:hover::after {
-        transform: scaleX(1);
-        transform-origin: bottom left;
-    }
-
-    .btn-primary:hover {
-        color: #fff;
-    }
-
     ::-webkit-scrollbar {
         width: 8px;
     }
@@ -75,192 +314,356 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #ddd;
+        background: rgba(17, 17, 17, 0.2);
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #bbb;
+        background: rgba(17, 17, 17, 0.35);
     }
 
     #toast {
         visibility: hidden;
         min-width: 250px;
-        background-color: #111;
+        background-color: var(--niceto-ink);
         color: #fff;
         text-align: center;
-        border-radius: 4px;
-        padding: 16px;
+        border-radius: 9999px;
+        padding: 14px 20px;
         position: fixed;
         z-index: 100;
         left: 50%;
         bottom: 30px;
-        transform: translateX(-50%);
-        font-size: 14px;
+        transform: translateX(-50%) translateY(20px);
+        font-size: 13px;
+        font-weight: 600;
         opacity: 0;
-        transition: opacity 0.3s, bottom 0.3s;
+        transition: all 0.3s ease;
+        box-shadow: 0 12px 25px rgba(18, 10, 6, 0.2);
     }
 
     #toast.show {
         visibility: visible;
         opacity: 1;
-        bottom: 50px;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    @media (min-width: 768px) {
+        .niceto-hero-card {
+            min-height: 420px;
+        }
+
+        .niceto-hero-content {
+            grid-template-columns: 1.1fr 0.9fr;
+            padding: 3rem;
+        }
     }
 </style>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<header class="pt-32 pb-16 px-6 md:px-12 bg-white">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div class="fade-in-up">
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 mb-6 leading-[0.9]">
-                Tus antojos,<br>
-                <span class="text-gray-400">al instante.</span>
-            </h1>
-            <p class="text-lg text-gray-500 mb-8 max-w-md font-light">Desde chocolates importados hasta esenciales de farmacia. {{ store.name }} te lo lleva en minutos.</p>
-            <div class="flex gap-4">
-                <a href="{{ store.products_url }}" class="btn-primary bg-black text-white px-8 py-4 rounded-full text-sm font-bold tracking-widest z-10 inline-flex items-center">
-                    VER PRODUCTOS
-                </a>
-                <a href="{{ store.products_url }}" class="px-8 py-4 rounded-full text-sm font-bold tracking-widest border border-gray-200 hover:border-black transition-colors inline-flex items-center">
-                    OFERTAS
-                </a>
+<section class="relative pt-28 md:pt-36 pb-14 px-6 md:px-12">
+    <div class="niceto-hero-glow"></div>
+    <div class="max-w-6xl mx-auto relative">
+        <div class="niceto-hero-card fade-in-up">
+            <div class="niceto-hero-media" aria-hidden="true">
+                <img src="{{ hero_image_url }}" alt="{{ store.name }}">
             </div>
-        </div>
-        <div class="relative h-[400px] md:h-[500px] bg-gray-50 rounded-3xl overflow-hidden fade-in-up delay-200 group">
-            <img src="{{ 'images/TendaNiceto_1080x1080px.jpg' | static_url }}" alt="{{ store.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        </div>
-    </div>
-</header>
-
-<section class="py-16 px-6 bg-[#FAFAFA]">
-    <div class="max-w-7xl mx-auto">
-        <h2 class="text-2xl font-bold mb-8 tracking-tight">Categorías</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {% for category in categories | slice(0, 6) %}
-                {% set icon_name = category_icon_map[category.name] | default('shopping-basket') %}
-                <a href="{{ category.url }}" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-black transition-all duration-300 cursor-pointer flex flex-col items-center justify-center gap-3 group">
-                    <div class="p-3 bg-gray-50 rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                        <i data-lucide="{{ icon_name }}" class="w-6 h-6"></i>
-                    </div>
-                    <span class="text-sm font-medium text-gray-700 group-hover:text-black">{{ category.name }}</span>
-                </a>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="py-20 px-6 bg-white">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between items-end mb-12 fade-in-up">
-            <div>
-                <h2 class="text-3xl font-bold tracking-tight mb-2">Destacados</h2>
-                <p class="text-gray-500 text-sm">Lo mejor de la semana seleccionado para vos.</p>
+            <div class="niceto-hero-logo-blur" aria-hidden="true">
+                {{ component('logos/logo', {logo_img_classes: 'niceto-hero-logo-img', logo_text_classes: 'niceto-hero-logo-text'}) }}
             </div>
-            <a href="{{ store.products_url }}" class="text-sm font-bold border-b-2 border-transparent hover:border-black transition-all pb-1">Ver todo</a>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {% for product in featured_products | slice(0, 8) %}
-                <div class="product-card bg-white rounded-3xl p-4 border border-gray-100 cursor-pointer flex flex-col h-full fade-in-up">
-                    <div class="relative aspect-square mb-4 bg-gray-50 rounded-2xl overflow-hidden group">
-                        <a href="{{ product.url }}" class="absolute inset-0">
-                            <img src="{{ product.featured_image | product_image_url('large') }}" alt="{{ product.name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+            <div class="niceto-hero-overlay"></div>
+            <div class="niceto-hero-content">
+                <div>
+                    <span class="niceto-kicker">Entrega express</span>
+                    {% if hero_title %}
+                        <h1 class="font-display text-4xl md:text-6xl mb-6 leading-[0.95] text-gray-900">
+                            {{ hero_title }}
+                        </h1>
+                    {% else %}
+                        <h1 class="font-display text-4xl md:text-6xl mb-6 leading-[0.95] text-gray-900">
+                            Tus antojos,<br>
+                            <span class="text-gray-400">al instante.</span>
+                        </h1>
+                    {% endif %}
+                    {% if hero_description %}
+                        <p class="text-base md:text-lg text-gray-500 mb-8 max-w-md">{{ hero_description }}</p>
+                    {% else %}
+                        <p class="text-base md:text-lg text-gray-500 mb-8 max-w-md">Desde chocolates importados hasta esenciales de farmacia. {{ store.name }} te lo lleva en minutos.</p>
+                    {% endif %}
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ hero_link }}" class="niceto-btn niceto-btn--primary">
+                            {{ hero_button_text }}
                         </a>
-                        {% if product.available and product.display_price %}
-                            <form class="js-product-form" method="post" action="{{ store.cart_url }}">
-                                <input type="hidden" name="add_to_cart" value="{{ product.id }}" />
-                                <button type="submit" data-product-name="{{ product.name }}" class="js-niceto-add absolute bottom-3 right-3 bg-black text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" aria-label="Agregar {{ product.name }}">
-                                    <i data-lucide="plus" class="w-5 h-5"></i>
-                                </button>
-                            </form>
-                        {% endif %}
-                    </div>
-                    <div class="mt-auto">
-                        {% if product.category %}
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{{ product.category.name }}</p>
-                        {% endif %}
-                        <h3 class="text-sm font-semibold text-gray-900 leading-tight mb-2 min-h-[40px]">
-                            <a href="{{ product.url }}" class="hover:underline">{{ product.name }}</a>
-                        </h3>
-                        {% if product.display_price %}
-                            <p class="text-base font-bold text-black">{{ product.price | money }}</p>
-                        {% endif %}
+                        <a href="{{ store.products_url }}" class="niceto-btn niceto-btn--ghost">
+                            OFERTAS
+                        </a>
                     </div>
                 </div>
+                <div class="hidden md:flex flex-col gap-3">
+                    <div class="niceto-hero-info">
+                        <i data-lucide="timer" class="w-5 h-5 text-gray-600"></i>
+                        <div>
+                            <span>Entrega</span>
+                            <p class="text-lg font-semibold text-gray-900">15-30 min</p>
+                        </div>
+                    </div>
+                    <div class="niceto-hero-info">
+                        <i data-lucide="package" class="w-5 h-5 text-gray-600"></i>
+                        <div>
+                            <span>Stock real</span>
+                            <p class="text-lg font-semibold text-gray-900">Listo para salir</p>
+                        </div>
+                    </div>
+                    <div class="niceto-hero-info">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-gray-600"></i>
+                        <div>
+                            <span>Pago</span>
+                            <p class="text-lg font-semibold text-gray-900">Seguro y rápido</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-14 px-6 md:px-12">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 fade-in-up">
+            <div>
+                <p class="niceto-kicker niceto-kicker--dark">Accesos rápidos</p>
+                <h2 class="text-2xl md:text-3xl font-display tracking-tight">{{ categories_title }}</h2>
+            </div>
+            <a href="{{ store.products_url }}" class="niceto-link">Ver todas</a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {% for category in categories | slice(0, 6) %}
+                {% set category_image = category.images is not empty ? (category.images | first | category_image_url('large')) : ('images/empty-placeholder.png' | static_url) %}
+                <a href="{{ category.url }}" class="niceto-category-card flex flex-col items-center justify-center gap-3 text-center">
+                    <div class="niceto-category-image">
+                        <img src="{{ category_image }}" alt="{{ category.name }}" loading="lazy">
+                    </div>
+                    <span class="text-sm font-semibold">{{ category.name }}</span>
+                </a>
             {% endfor %}
         </div>
     </div>
 </section>
 
+{% if sale_products | length > 0 %}
+    <section class="py-16 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
+                <div>
+                    <p class="niceto-kicker niceto-kicker--dark">Ofertas</p>
+                    <h2 class="text-3xl md:text-4xl font-display tracking-tight">Precios que vuelan</h2>
+                    <p class="niceto-muted text-sm">Promos activas para resolver el antojo.</p>
+                </div>
+                <a href="{{ store.products_url }}" class="niceto-link">Ver todo</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {% for product in sale_products | slice(0, 8) %}
+                    <div class="product-card niceto-product-card p-4 cursor-pointer flex flex-col h-full fade-in-up">
+                        <div class="relative aspect-square mb-4 bg-gray-50 rounded-2xl overflow-hidden group">
+                            <a href="{{ product.url }}" class="absolute inset-0">
+                                <img src="{{ product.featured_image | product_image_url('large') }}" alt="{{ product.name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                            </a>
+                            {% if product.available and product.display_price %}
+                                <form class="js-product-form" method="post" action="{{ store.cart_url }}">
+                                    <input type="hidden" name="add_to_cart" value="{{ product.id }}" />
+                                    <button type="submit" data-product-name="{{ product.name }}" class="js-niceto-add niceto-add-btn absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" aria-label="Agregar {{ product.name }}">
+                                        <i data-lucide="plus" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="mt-auto">
+                            {% if product.category %}
+                                <p class="niceto-eyebrow mb-1">{{ product.category.name }}</p>
+                            {% endif %}
+                            <h3 class="text-sm font-semibold leading-tight mb-2 min-h-[40px]">
+                                <a href="{{ product.url }}" class="hover:underline">{{ product.name }}</a>
+                            </h3>
+                            {% if product.display_price %}
+                                <p class="text-base font-bold">{{ product.price | money }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% if featured_products | length > 0 %}
+    <section class="py-16 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
+                <div>
+                    <p class="niceto-kicker niceto-kicker--dark">Destacados</p>
+                    <h2 class="text-3xl md:text-4xl font-display tracking-tight">Selección de la semana</h2>
+                    <p class="niceto-muted text-sm">Lo mejor de la semana seleccionado para vos.</p>
+                </div>
+                <a href="{{ store.products_url }}" class="niceto-link">Ver todo</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {% for product in featured_products | slice(0, 8) %}
+                    <div class="product-card niceto-product-card p-4 cursor-pointer flex flex-col h-full fade-in-up">
+                        <div class="relative aspect-square mb-4 bg-gray-50 rounded-2xl overflow-hidden group">
+                            <a href="{{ product.url }}" class="absolute inset-0">
+                                <img src="{{ product.featured_image | product_image_url('large') }}" alt="{{ product.name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                            </a>
+                            {% if product.available and product.display_price %}
+                                <form class="js-product-form" method="post" action="{{ store.cart_url }}">
+                                    <input type="hidden" name="add_to_cart" value="{{ product.id }}" />
+                                    <button type="submit" data-product-name="{{ product.name }}" class="js-niceto-add niceto-add-btn absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" aria-label="Agregar {{ product.name }}">
+                                        <i data-lucide="plus" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="mt-auto">
+                            {% if product.category %}
+                                <p class="niceto-eyebrow mb-1">{{ product.category.name }}</p>
+                            {% endif %}
+                            <h3 class="text-sm font-semibold leading-tight mb-2 min-h-[40px]">
+                                <a href="{{ product.url }}" class="hover:underline">{{ product.name }}</a>
+                            </h3>
+                            {% if product.display_price %}
+                                <p class="text-base font-bold">{{ product.price | money }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% if new_products | length > 0 %}
+    <section class="py-16 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
+                <div>
+                    <p class="niceto-kicker niceto-kicker--dark">Novedades</p>
+                    <h2 class="text-3xl md:text-4xl font-display tracking-tight">Recién llegados</h2>
+                    <p class="niceto-muted text-sm">Productos nuevos para que elijas primero.</p>
+                </div>
+                <a href="{{ store.products_url }}" class="niceto-link">Ver todo</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {% for product in new_products | slice(0, 8) %}
+                    <div class="product-card niceto-product-card p-4 cursor-pointer flex flex-col h-full fade-in-up">
+                        <div class="relative aspect-square mb-4 bg-gray-50 rounded-2xl overflow-hidden group">
+                            <a href="{{ product.url }}" class="absolute inset-0">
+                                <img src="{{ product.featured_image | product_image_url('large') }}" alt="{{ product.name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                            </a>
+                            {% if product.available and product.display_price %}
+                                <form class="js-product-form" method="post" action="{{ store.cart_url }}">
+                                    <input type="hidden" name="add_to_cart" value="{{ product.id }}" />
+                                    <button type="submit" data-product-name="{{ product.name }}" class="js-niceto-add niceto-add-btn absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" aria-label="Agregar {{ product.name }}">
+                                        <i data-lucide="plus" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="mt-auto">
+                            {% if product.category %}
+                                <p class="niceto-eyebrow mb-1">{{ product.category.name }}</p>
+                            {% endif %}
+                            <h3 class="text-sm font-semibold leading-tight mb-2 min-h-[40px]">
+                                <a href="{{ product.url }}" class="hover:underline">{{ product.name }}</a>
+                            </h3>
+                            {% if product.display_price %}
+                                <p class="text-base font-bold">{{ product.price | money }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% set combo_title = settings.banner_01_title | default('Combo Cine en Casa') %}
+{% set combo_description = settings.banner_01_description | default('Llevate 2 Coca-Cola 1.5L + Lays Clásicas + Chocolate Block con un 20% OFF.') %}
+{% set combo_button = settings.banner_01_button | default('VER COMBOS') %}
+{% set combo_url = settings.banner_01_url ? settings.banner_01_url | setting_url : store.products_url %}
+{% set combo_image_custom = "banner_01.jpg" | has_custom_image %}
+{% set combo_image_url = combo_image_custom ? ("banner_01.jpg" | static_url | settings_image_url('huge')) : ("images/home_promo_image.jpg" | static_url) %}
+
 <section class="py-20 px-6">
-    <div class="max-w-7xl mx-auto bg-black text-white rounded-[2rem] overflow-hidden relative fade-in-up">
+    <div class="max-w-6xl mx-auto bg-black text-white rounded-[2rem] overflow-hidden relative fade-in-up">
         <div class="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full blur-[100px] opacity-50 pointer-events-none"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-12 md:p-20 items-center relative z-10">
             <div>
-                <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">Trending</span>
-                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 !text-white">Combo Cine en Casa</h2>
-                <p class="text-gray-400 text-lg mb-8 font-light">Llevate 2 Coca-Cola 1.5L + Lays Clásicas + Chocolate Block con un 20% OFF.</p>
-                <a href="{{ store.products_url }}" class="bg-white text-black px-8 py-3 rounded-full font-bold tracking-wide hover:bg-gray-200 transition-colors inline-flex items-center">
-                    VER COMBOS
-                </a>
+                <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">Combos</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 !text-white">{{ combo_title }}</h2>
+                <p class="text-gray-400 text-lg mb-8 font-light">{{ combo_description }}</p>
+                {% if combo_button %}
+                    <a href="{{ combo_url }}" class="bg-white text-black px-8 py-3 rounded-full font-bold tracking-wide hover:bg-gray-200 transition-colors inline-flex items-center">
+                        {{ combo_button }}
+                    </a>
+                {% endif %}
             </div>
             <div class="flex justify-center">
-                <img src="https://images.unsplash.com/photo-1527960471264-932f39eb5846?q=80&w=1000&auto=format&fit=crop" alt="Snacks" class="rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 w-3/4 object-cover grayscale-[20%]">
+                <img src="{{ combo_image_url }}" alt="{{ combo_title }}" class="rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 w-3/4 object-cover grayscale-[10%]">
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-16 border-t border-gray-100 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-        <p class="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-10">Nuestros Partners</p>
-        {% if settings.brands and settings.brands is not empty %}
-            <div class="relative">
-                <div class="js-swiper-brands swiper-container py-4" data-brands-autoplay="2200" data-brands-speed="650" data-brands-gap="28" data-brands-mobile="2.6" data-brands-tablet="4" data-brands-desktop="5" data-brands-wide="6">
-                    <div class="swiper-wrapper items-center">
-                        {% for brand in settings.brands %}
-                            {% set brand_title = brand.title | default('Partner #' ~ loop.index) %}
-                            <div class="swiper-slide flex justify-center">
-                                <div class="w-28 h-28 rounded-full border border-gray-200 shadow-sm bg-white/80 flex items-center justify-center overflow-hidden">
-                                    {% if brand.image %}
-                                        <img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ brand.image | static_url | settings_image_url('large') }}" class="lazyload w-16 h-16 object-contain" alt="{{ brand_title }}">
-                                    {% else %}
-                                        <span class="text-xs font-semibold text-gray-600 text-center px-3 leading-tight">{{ brand_title }}</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
+{% if combos_products | length > 0 %}
+    <section class="py-16 px-6 border-t border-gray-100 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
+                <div>
+                    <p class="niceto-kicker niceto-kicker--dark">Combos</p>
+                    <h2 class="text-2xl md:text-3xl font-display tracking-tight">{{ combos_title }}</h2>
+                    <p class="niceto-muted text-sm">Armá tu combo con lo que más te gusta.</p>
+                </div>
+                <a href="{{ combos_url }}" class="niceto-link">Ver combos</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {% for product in combos_products | slice(0, 8) %}
+                    <div class="product-card niceto-product-card p-4 cursor-pointer flex flex-col h-full fade-in-up">
+                        <div class="relative aspect-square mb-4 bg-gray-50 rounded-2xl overflow-hidden group">
+                            <a href="{{ product.url }}" class="absolute inset-0">
+                                <img src="{{ product.featured_image | product_image_url('large') }}" alt="{{ product.name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                            </a>
+                            {% if product.available and product.display_price %}
+                                <form class="js-product-form" method="post" action="{{ store.cart_url }}">
+                                    <input type="hidden" name="add_to_cart" value="{{ product.id }}" />
+                                    <button type="submit" data-product-name="{{ product.name }}" class="js-niceto-add niceto-add-btn absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" aria-label="Agregar {{ product.name }}">
+                                        <i data-lucide="plus" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="mt-auto">
+                            {% if product.category %}
+                                <p class="niceto-eyebrow mb-1">{{ product.category.name }}</p>
+                            {% endif %}
+                            <h3 class="text-sm font-semibold leading-tight mb-2 min-h-[40px]">
+                                <a href="{{ product.url }}" class="hover:underline">{{ product.name }}</a>
+                            </h3>
+                            {% if product.display_price %}
+                                <p class="text-base font-bold">{{ product.price | money }}</p>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-                <div class="hidden md:flex absolute inset-y-0 left-0 items-center pointer-events-none">
-                    <button type="button" class="js-swiper-brands-prev pointer-events-auto w-10 h-10 rounded-full bg-white border border-gray-200 shadow text-gray-700 flex items-center justify-center">
-                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                <div class="hidden md:flex absolute inset-y-0 right-0 items-center pointer-events-none">
-                    <button type="button" class="js-swiper-brands-next pointer-events-auto w-10 h-10 rounded-full bg-white border border-gray-200 shadow text-gray-700 flex items-center justify-center">
-                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                    </button>
-                </div>
+                {% endfor %}
             </div>
-        {% else %}
-            <div class="flex flex-wrap justify-center gap-12 md:gap-20 opacity-40 grayscale">
-                <span class="text-xl font-bold tracking-tighter">COCA-COLA</span>
-                <span class="text-xl font-bold tracking-tighter">MILKA</span>
-                <span class="text-xl font-bold tracking-tighter">LAY'S</span>
-                <span class="text-xl font-bold tracking-tighter">FERNET BRANCA</span>
-                <span class="text-xl font-bold tracking-tighter">HEINEKEN</span>
-            </div>
-        {% endif %}
-    </div>
-</section>
+        </div>
+    </section>
+{% endif %}
 
 <div id="toast">Producto agregado al carrito</div>
 
 <script>
-    lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+    }
 
     function showToast(message) {
         const toast = document.getElementById("toast");
@@ -298,14 +701,18 @@
         observer.observe(el);
     });
 
-    window.addEventListener('scroll', () => {
-        const nav = document.getElementById('navbar');
-        if (window.scrollY > 50) {
-            nav.classList.add('shadow-sm');
-            nav.classList.replace('py-4', 'py-3');
-        } else {
-            nav.classList.remove('shadow-sm');
-            nav.classList.replace('py-3', 'py-4');
+    const nav = document.getElementById('navbar');
+    const handleScroll = () => {
+        if (!nav) {
+            return;
         }
-    });
+        if (window.scrollY > 40) {
+            nav.classList.add('is-scrolled');
+        } else {
+            nav.classList.remove('is-scrolled');
+        }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll);
 </script>

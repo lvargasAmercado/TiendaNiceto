@@ -1186,51 +1186,53 @@ DOMContentLoaded.addEventOrExecute(() => {
         {% if settings.brands and settings.brands is not empty %}
 
             var brandsSwiperElement = document.querySelector('.js-swiper-brands');
-            var brandsAutoplayDelay = brandsSwiperElement ? parseInt(brandsSwiperElement.dataset.brandsAutoplay, 10) || 2600 : 2600;
-            var brandsAutoplaySpeed = brandsSwiperElement ? parseInt(brandsSwiperElement.dataset.brandsSpeed, 10) || 600 : 600;
-            var brandsGap = brandsSwiperElement ? parseInt(brandsSwiperElement.dataset.brandsGap, 10) || 24 : 24;
-            var brandsSlidesMobile = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsMobile) || 2.2 : 2.2;
-            var brandsSlidesTablet = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsTablet) || 4 : 4;
-            var brandsSlidesDesktop = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsDesktop) || 6 : 6;
-            var brandsSlidesWide = brandsSwiperElement ? parseFloat(brandsSwiperElement.dataset.brandsWide) || 8 : 8;
+            if (brandsSwiperElement) {
+                var brandsAutoplayDelay = parseInt(brandsSwiperElement.dataset.brandsAutoplay, 10) || 2600;
+                var brandsAutoplaySpeed = parseInt(brandsSwiperElement.dataset.brandsSpeed, 10) || 600;
+                var brandsGap = parseInt(brandsSwiperElement.dataset.brandsGap, 10) || 24;
+                var brandsSlidesMobile = parseFloat(brandsSwiperElement.dataset.brandsMobile) || 2.2;
+                var brandsSlidesTablet = parseFloat(brandsSwiperElement.dataset.brandsTablet) || 4;
+                var brandsSlidesDesktop = parseFloat(brandsSwiperElement.dataset.brandsDesktop) || 6;
+                var brandsSlidesWide = parseFloat(brandsSwiperElement.dataset.brandsWide) || 8;
 
-            createSwiper('.js-swiper-brands', {
-                lazy: true,
-                watchOverflow: true,
-                centerInsufficientSlides: true,
-                threshold: 5,
-                slidesPerView: brandsSlidesMobile,
-                spaceBetween: brandsGap,
-                speed: brandsAutoplaySpeed,
-                loop: true,
-                autoplay: {
-                    delay: brandsAutoplayDelay,
-                    disableOnInteraction: false,
-                },
-                navigation: {
-                    nextEl: '.js-swiper-brands-next',
-                    prevEl: '.js-swiper-brands-prev',
-                },
-                on: {
-                    afterInit: function () {
-                        hideSwiperControls(".js-swiper-brands-prev", ".js-swiper-brands-next");
+                createSwiper('.js-swiper-brands', {
+                    lazy: true,
+                    watchOverflow: true,
+                    centerInsufficientSlides: true,
+                    threshold: 5,
+                    slidesPerView: brandsSlidesMobile,
+                    spaceBetween: brandsGap,
+                    speed: brandsAutoplaySpeed,
+                    loop: true,
+                    autoplay: {
+                        delay: brandsAutoplayDelay,
+                        disableOnInteraction: false,
                     },
-                },
-                breakpoints: {
-                    480: {
-                        slidesPerView: brandsSlidesTablet,
+                    navigation: {
+                        nextEl: '.js-swiper-brands-next',
+                        prevEl: '.js-swiper-brands-prev',
                     },
-                    768: {
-                        slidesPerView: brandsSlidesDesktop,
+                    on: {
+                        afterInit: function () {
+                            hideSwiperControls(".js-swiper-brands-prev", ".js-swiper-brands-next");
+                        },
                     },
-                    1024: {
-                        slidesPerView: brandsSlidesWide,
+                    breakpoints: {
+                        480: {
+                            slidesPerView: brandsSlidesTablet,
+                        },
+                        768: {
+                            slidesPerView: brandsSlidesDesktop,
+                        },
+                        1024: {
+                            slidesPerView: brandsSlidesWide,
+                        }
                     }
-                }
-            },
-            function(swiperInstance) {
-                window.brandsSwiper = swiperInstance;
-            });
+                },
+                function(swiperInstance) {
+                    window.brandsSwiper = swiperInstance;
+                });
+            }
 
         {% endif %}
 

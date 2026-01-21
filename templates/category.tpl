@@ -14,6 +14,12 @@
 {% endif %}
 
 {% if not show_help %}
+	{% set category_banner = (category.images is not empty) or ("banner-products.jpg" | has_custom_image) %}
+
+	{% if category_banner %}
+		{% include 'snipplets/category-banner.tpl' %}
+	{% endif %}
+
 	{% if products %}
 		{% include 'snipplets/grid/filters-modals.tpl' %}
 		<section class="js-category-controls-prev category-controls-sticky-detector"></section>
@@ -25,10 +31,6 @@
 				<nav class="flex text-xs text-gray-500 mb-2 gap-2">
 					{% include 'snipplets/breadcrumbs.tpl' %}
 				</nav>
-				<h1 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">{{ category.name }}</h1>
-				{% if category.description %}
-					<p class="text-sm text-gray-500 mt-2 max-w-2xl">{{ category.description }}</p>
-				{% endif %}
 			</div>
 
 			<div class="md:hidden w-full relative">

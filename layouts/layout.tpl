@@ -60,8 +60,23 @@
             {{ settings.css_code | raw }}
         </style>
         <style>
+            :root {
+                --niceto-ink: #111111;
+                --niceto-cream: #fafafa;
+                --niceto-cream-strong: #ffffff;
+                --niceto-orange: #e67e22;
+                --niceto-orange-deep: #c8640d;
+                --niceto-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+            }
+
             .template-content {
-                padding-top: 6.5rem;
+                padding-top: 7.5rem;
+            }
+
+            @media (max-width: 767px) {
+                .template-content {
+                    padding-top: 7rem;
+                }
             }
 
             .template-home .template-content {
@@ -69,9 +84,14 @@
             }
 
             body {
-                font-family: 'Inter', sans-serif;
-                background-color: #fafafa;
-                color: #111;
+                font-family: var(--body-font);
+                background-color: var(--niceto-cream);
+                color: var(--niceto-ink);
+            }
+
+            .font-display {
+                font-family: var(--heading-font);
+                letter-spacing: -0.02em;
             }
 
             .fade-in-up {
@@ -94,6 +114,199 @@
             .product-card:hover {
                 transform: translateY(-4px);
                 box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08);
+            }
+
+            .niceto-header {
+                background: #e67e22;
+                color: #fff;
+                border-bottom: 1px solid #c8640d;
+                box-shadow: var(--niceto-shadow);
+            }
+
+            .niceto-header__bottom {
+                background: #ffffff;
+                color: var(--niceto-ink);
+                border-top: 1px solid #f1f1f1;
+            }
+
+            .niceto-header.is-scrolled {
+                box-shadow: 0 18px 38px rgba(0, 0, 0, 0.18);
+            }
+
+            .niceto-icon-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 9999px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+            }
+
+            .niceto-icon-btn:hover {
+                background: rgba(255, 255, 255, 0.18);
+                transform: translateY(-1px);
+            }
+
+            .niceto-icon-btn--accent {
+                background: #fff;
+                color: var(--niceto-ink);
+                border-color: rgba(17, 17, 17, 0.2);
+            }
+
+            .niceto-icon-btn--accent:hover {
+                background: var(--niceto-orange);
+                color: #fff;
+                border-color: var(--niceto-orange);
+            }
+
+            .niceto-search {
+                position: relative;
+                width: 40px;
+                height: 40px;
+                border-radius: 9999px;
+                border: 1px solid rgba(255, 255, 255, 0.45);
+                background: rgba(255, 255, 255, 0.18);
+                overflow: hidden;
+                transition: width 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            }
+
+            .niceto-search-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #fff;
+                pointer-events: none;
+            }
+
+            .niceto-search-input {
+                width: 100%;
+                height: 100%;
+                padding: 0 12px 0 34px;
+                border: none;
+                outline: none;
+                background: transparent;
+                color: #fff;
+                font-size: 12px;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            }
+
+            .niceto-search-input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .niceto-search:focus-within {
+                width: 220px;
+                background: rgba(255, 255, 255, 0.25);
+                border-color: rgba(255, 255, 255, 0.7);
+            }
+
+            .niceto-search:focus-within .niceto-search-input {
+                opacity: 1;
+            }
+
+            @media (max-width: 640px) {
+                .niceto-search:focus-within {
+                    width: 70vw;
+                }
+            }
+
+            .niceto-cart-count {
+                background: var(--niceto-orange);
+                color: #fff;
+                font-size: 10px;
+                font-weight: 700;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 9999px;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .niceto-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 12px;
+                border-radius: 9999px;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.2em;
+                border: 1px solid rgba(17, 17, 17, 0.2);
+                background: #fff;
+                color: var(--niceto-ink);
+            }
+
+            .niceto-pill--light {
+                background: rgba(255, 255, 255, 0.12);
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .niceto-pill svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .niceto-nav .nav-desktop-list {
+                display: flex;
+                align-items: center;
+                gap: 1.75rem;
+                padding: 0;
+                margin: 0;
+            }
+
+            .niceto-nav .nav-list-link {
+                color: var(--niceto-ink) !important;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.22em;
+                padding: 6px 0;
+            }
+
+            .niceto-nav .nav-list-link:hover,
+            .niceto-nav .nav-list-link.selected {
+                color: var(--niceto-orange) !important;
+            }
+
+            .niceto-nav .nav-list-link::after {
+                background: var(--niceto-orange);
+            }
+
+            .niceto-chip {
+                display: inline-flex;
+                align-items: center;
+                padding: 6px 12px;
+                border-radius: 9999px;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                border: 1px solid rgba(17, 17, 17, 0.15);
+                background: #fff;
+                color: var(--niceto-ink);
+                white-space: nowrap;
+                transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            }
+
+            .niceto-chip:hover {
+                border-color: var(--niceto-orange);
+                color: var(--niceto-orange);
+            }
+
+            .niceto-chip.is-active {
+                background: var(--niceto-ink);
+                color: #fff;
+                border-color: var(--niceto-ink);
             }
 
             .hide-scrollbar::-webkit-scrollbar {
