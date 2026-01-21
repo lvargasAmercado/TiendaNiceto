@@ -288,6 +288,13 @@ Encabezado
 		description = Color de textos para la cantidad de productos en el carrito
 	title
 		title = Logo
+	image
+		original = header_logo_image.jpg
+		title = Logo para el header (opcional)
+		width = 575
+		height = 230
+	description
+		description = Si no cargás una imagen, se usa la predeterminada del tema.
 	dropdown
 		name = logo_size
 		description = Tamaño del logo
@@ -295,6 +302,14 @@ Encabezado
 			small = Chico
 			medium = Mediano
 			big = Grande
+	title
+		title = Textos
+	i18n_input
+		name = header_delivery_label
+		description = Texto de entrega
+	i18n_input
+		name = header_search_placeholder
+		description = Placeholder del buscador
 	title
 		title = Idiomas y monedas
 	checkbox
@@ -550,6 +565,66 @@ Página de inicio
 	subtitle
 		subtitle = <a target='_blank' data-toggle-info='show-on_slider_mobile-inactive' href='https://ayuda.tiendanube.com/es/articles/3297783-como-usar-el-carrusel-de-imagenes-para-las-plantillas-idea-bahia-y-amazonas'>¿Cómo diseñar las imágenes para tu carrusel?</a>
 	collapse
+		title = Hero principal
+		backto = home_order_position
+	i18n_input
+		name = home_hero_kicker
+		description = Antetítulo
+	i18n_input
+		name = home_hero_title_line_1
+		description = Título (línea 1)
+	i18n_input
+		name = home_hero_title_line_2
+		description = Título (línea 2)
+	i18n_input
+		name = home_hero_description
+		description = Descripción
+	i18n_input
+		name = home_hero_primary_label
+		description = Texto del botón principal
+	i18n_input
+		name = home_hero_primary_link
+		description = Link del botón principal
+	i18n_input
+		name = home_hero_secondary_label
+		description = Texto del botón secundario
+	i18n_input
+		name = home_hero_secondary_link
+		description = Link del botón secundario
+	subtitle
+		subtitle = Imagen de fondo
+	image
+		original = home_hero_background.jpg
+		title = Cargar imagen (JPG, GIF, PNG)
+		width = 1580
+		height = 700
+	subtitle
+		subtitle = Beneficios
+	subtitle
+		subtitle = Beneficio 1
+	i18n_input
+		name = home_hero_info_01_label
+		description = Título
+	i18n_input
+		name = home_hero_info_01_value
+		description = Texto
+	subtitle
+		subtitle = Beneficio 2
+	i18n_input
+		name = home_hero_info_02_label
+		description = Título
+	i18n_input
+		name = home_hero_info_02_value
+		description = Texto
+	subtitle
+		subtitle = Beneficio 3
+	i18n_input
+		name = home_hero_info_03_label
+		description = Título
+	i18n_input
+		name = home_hero_info_03_value
+		description = Texto
+	collapse
 		title = Categorías principales
 		backto = home_order_position
 	checkbox
@@ -558,12 +633,39 @@ Página de inicio
 	i18n_input
 		name = main_categories_title
 		description = Título
+	i18n_input
+		name = home_categories_kicker
+		description = Antetítulo
+	i18n_input
+		name = home_categories_link_label
+		description = Texto del link
+	i18n_input
+		name = home_categories_link_url
+		description = Link del bloque
 	gallery
 		name = slider_categories
 		gallery_image = Agregar imagen
 		gallery_link = [Opcional] Página web a la que quieres que te lleve la imagen al hacer click
 		gallery_width = 160
 		gallery_height = 160
+	collapse
+		title = Combos (categoría)
+		backto = home_order_position
+	text
+		name = home_combos_category_handle
+		description = Handle/URL corta de la categoría (ej: combos)
+	i18n_input
+		name = home_combos_kicker
+		description = Antetítulo
+	i18n_input
+		name = home_combos_title
+		description = Título (opcional)
+	i18n_input
+		name = home_combos_subtitle
+		description = Descripción
+	i18n_input
+		name = home_combos_link_label
+		description = Texto del link
 	collapse
 		title = Información de envíos, pagos y compra
 		backto = home_order_position
@@ -748,6 +850,15 @@ Página de inicio
 	i18n_input
 		name = featured_products_title
 		description = Título
+	i18n_input
+		name = featured_products_kicker
+		description = Antetítulo
+	i18n_input
+		name = featured_products_subtitle
+		description = Subtítulo
+	i18n_input
+		name = home_products_link_label
+		description = Texto del link "Ver todo"
 	checkbox
 		name = featured_product_colors
 		description = Usar estos colores para la sección
@@ -805,6 +916,12 @@ Página de inicio
 	i18n_input
 		name = new_products_title
 		description = Título
+	i18n_input
+		name = new_products_kicker
+		description = Antetítulo
+	i18n_input
+		name = new_products_subtitle
+		description = Subtítulo
 	checkbox
 		name = new_product_colors
 		description = Usar estos colores para la sección
@@ -862,6 +979,12 @@ Página de inicio
 	i18n_input
 		name = sale_products_title
 		description = Título
+	i18n_input
+		name = sale_products_kicker
+		description = Antetítulo
+	i18n_input
+		name = sale_products_subtitle
+		description = Subtítulo
 	checkbox
 		name = sale_product_colors
 		description = Usar estos colores para la sección
@@ -1267,6 +1390,9 @@ Página de inicio
 	i18n_input
 		name = banner_01_description
 		description = Descripción
+	i18n_input
+		name = banner_01_kicker
+		description = Antetítulo
 	i18n_input
 		name = banner_01_button
 		description = Texto del botón

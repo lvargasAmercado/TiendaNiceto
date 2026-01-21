@@ -2,6 +2,10 @@
 <div class="js-overlay site-overlay" style="display: none;"></div>
 
 {% set cart_count = cart.items_count | default(0) %}
+{% set header_logo_custom = 'header_logo_image.jpg' | has_custom_image %}
+{% set header_logo_url = header_logo_custom ? ('header_logo_image.jpg' | static_url | settings_image_url('large')) : ('images/JPG_TiendaNiceto_575x230px.jpg' | static_url) %}
+{% set header_delivery_label = settings.header_delivery_label %}
+{% set header_search_placeholder = settings.header_search_placeholder %}
 
 <header id="navbar" class="js-head-main niceto-header fixed top-0 w-full z-50 transition-all duration-300" data-store="head">
 	{% if settings.ad_bar %}
@@ -17,17 +21,19 @@
 					</a>
 					<form action="{{ store.search_url }}" method="get" class="niceto-search" role="search">
 						<i data-lucide="search" class="niceto-search-icon w-4 h-4"></i>
-						<input type="search" name="q" placeholder="Buscar productos" class="niceto-search-input" aria-label="{{ 'Buscar' | translate }}">
+						<input type="search" name="q" placeholder="{{ header_search_placeholder }}" class="niceto-search-input" aria-label="{{ 'Buscar' | translate }}">
 					</form>
-					<div class="hidden xl:flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/70">
-						<span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
-						Entrega 15-30 min
-					</div>
+					{% if header_delivery_label %}
+						<div class="hidden xl:flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+							<span class="w-1.5 h-1.5 rounded-full bg-black/30"></span>
+							{{ header_delivery_label }}
+						</div>
+					{% endif %}
 				</div>
 
 				<div class="flex items-center justify-center">
 					<a href="{{ store.url }}" class="inline-flex items-center">
-						<img src="{{ 'images/JPG_TiendaNiceto_575x230px.jpg' | static_url }}" alt="{{ store.name }}" class="h-10 sm:h-12 md:h-14 w-auto object-contain">
+						<img src="{{ header_logo_url }}" alt="{{ store.name }}" class="h-10 sm:h-12 md:h-14 w-auto object-contain">
 					</a>
 				</div>
 
@@ -67,12 +73,14 @@
 			<nav class="niceto-nav flex-1">
 				{% snipplet "navigation/navigation.tpl" %}
 			</nav>
-			<div class="hidden lg:flex items-center gap-3">
-				<span class="niceto-pill">
-					<i data-lucide="timer" class="w-4 h-4"></i>
-					Entrega 15-30 min
-				</span>
-			</div>
+			{% if header_delivery_label %}
+				<div class="hidden lg:flex items-center gap-3">
+					<span class="niceto-pill">
+						<i data-lucide="timer" class="w-4 h-4"></i>
+						{{ header_delivery_label }}
+					</span>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 

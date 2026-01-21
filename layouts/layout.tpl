@@ -117,16 +117,21 @@
             }
 
             .niceto-header {
-                background: #e67e22;
-                color: #fff;
-                border-bottom: 1px solid #c8640d;
+                background: #e7e4e1;
+                color: var(--niceto-ink);
+                border-bottom: 1px solid #d8d2cb;
                 box-shadow: var(--niceto-shadow);
             }
 
             .niceto-header__bottom {
-                background: #ffffff;
-                color: var(--niceto-ink);
-                border-top: 1px solid #f1f1f1;
+                background: #e67e22;
+                color: #fff;
+                border-top: 1px solid #c8640d;
+            }
+
+            .niceto-header__mobile {
+                background: #e67e22;
+                color: #fff;
             }
 
             .niceto-header.is-scrolled {
@@ -137,9 +142,9 @@
                 width: 40px;
                 height: 40px;
                 border-radius: 9999px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                background: rgba(255, 255, 255, 0.1);
-                color: #fff;
+                border: 1px solid rgba(17, 17, 17, 0.2);
+                background: rgba(17, 17, 17, 0.04);
+                color: var(--niceto-ink);
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -147,7 +152,8 @@
             }
 
             .niceto-icon-btn:hover {
-                background: rgba(255, 255, 255, 0.18);
+                background: #fff;
+                border-color: rgba(17, 17, 17, 0.35);
                 transform: translateY(-1px);
             }
 
@@ -168,8 +174,8 @@
                 width: 40px;
                 height: 40px;
                 border-radius: 9999px;
-                border: 1px solid rgba(255, 255, 255, 0.45);
-                background: rgba(255, 255, 255, 0.18);
+                border: 1px solid rgba(17, 17, 17, 0.2);
+                background: #fff;
                 overflow: hidden;
                 transition: width 0.25s ease, background 0.25s ease, border-color 0.25s ease;
             }
@@ -179,7 +185,7 @@
                 left: 12px;
                 top: 50%;
                 transform: translateY(-50%);
-                color: #fff;
+                color: var(--niceto-ink);
                 pointer-events: none;
             }
 
@@ -190,20 +196,20 @@
                 border: none;
                 outline: none;
                 background: transparent;
-                color: #fff;
+                color: var(--niceto-ink);
                 font-size: 12px;
                 opacity: 0;
                 transition: opacity 0.2s ease;
             }
 
             .niceto-search-input::placeholder {
-                color: rgba(255, 255, 255, 0.7);
+                color: rgba(17, 17, 17, 0.55);
             }
 
             .niceto-search:focus-within {
                 width: 220px;
-                background: rgba(255, 255, 255, 0.25);
-                border-color: rgba(255, 255, 255, 0.7);
+                background: #fff;
+                border-color: rgba(17, 17, 17, 0.45);
             }
 
             .niceto-search:focus-within .niceto-search-input {
@@ -246,9 +252,9 @@
             }
 
             .niceto-pill--light {
-                background: rgba(255, 255, 255, 0.12);
-                color: #fff;
-                border-color: rgba(255, 255, 255, 0.2);
+                background: #fff;
+                color: var(--niceto-ink);
+                border-color: rgba(17, 17, 17, 0.2);
             }
 
             .niceto-pill svg {
@@ -265,21 +271,38 @@
             }
 
             .niceto-nav .nav-list-link {
-                color: var(--niceto-ink) !important;
+                color: rgba(255, 255, 255, 0.9) !important;
                 font-size: 11px;
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.22em;
                 padding: 6px 0;
+                position: relative;
+                transition: color 0.2s ease;
             }
 
             .niceto-nav .nav-list-link:hover,
             .niceto-nav .nav-list-link.selected {
-                color: var(--niceto-orange) !important;
+                color: #fff !important;
             }
 
             .niceto-nav .nav-list-link::after {
-                background: var(--niceto-orange);
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -0.25rem;
+                height: 2px;
+                background: currentColor;
+                opacity: 0;
+                transform: translateY(4px);
+                transition: opacity 0.2s ease, transform 0.2s ease;
+            }
+
+            .niceto-nav .nav-list-link:hover::after,
+            .niceto-nav .nav-list-link.selected::after {
+                opacity: 1;
+                transform: translateY(0);
             }
 
             .niceto-chip {
@@ -307,6 +330,23 @@
                 background: var(--niceto-ink);
                 color: #fff;
                 border-color: var(--niceto-ink);
+            }
+
+            .niceto-header__mobile .niceto-chip {
+                background: rgba(255, 255, 255, 0.12);
+                border-color: rgba(255, 255, 255, 0.35);
+                color: #fff;
+            }
+
+            .niceto-header__mobile .niceto-chip:hover {
+                border-color: #fff;
+                color: #fff;
+            }
+
+            .niceto-header__mobile .niceto-chip.is-active {
+                background: #fff;
+                color: var(--niceto-ink);
+                border-color: #fff;
             }
 
             .hide-scrollbar::-webkit-scrollbar {

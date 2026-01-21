@@ -1,18 +1,45 @@
 {% set featured_products = sections.primary.products | default([]) %}
 {% set sale_products = sections.sale.products | default([]) %}
 {% set new_products = sections.new.products | default([]) %}
-{% set hero_slide = settings.slider and settings.slider is not empty ? (settings.slider | first) : null %}
-{% set hero_title = hero_slide and hero_slide.title ? hero_slide.title : null %}
-{% set hero_description = hero_slide and hero_slide.description ? hero_slide.description : null %}
-{% set hero_button = hero_slide and hero_slide.button ? hero_slide.button : null %}
-{% set hero_link = hero_slide and hero_slide.link ? hero_slide.link | setting_url : store.products_url %}
-{% set hero_button_text = hero_button ? hero_button : 'VER PRODUCTOS' %}
 {% set categories_title = settings.main_categories_title | default('Categorías principales') %}
-{% set hero_image_url = 'images/TendaNiceto_1580x700px.jpg' | static_url %}
-{% set combos_handle = 'combos' %}
+{% set categories_kicker = settings.home_categories_kicker %}
+{% set categories_link_label = settings.home_categories_link_label %}
+{% set categories_link_url = settings.home_categories_link_url ? settings.home_categories_link_url | setting_url : store.products_url %}
+{% set hero_kicker = settings.home_hero_kicker %}
+{% set hero_title_line_1 = settings.home_hero_title_line_1 %}
+{% set hero_title_line_2 = settings.home_hero_title_line_2 %}
+{% set hero_description = settings.home_hero_description %}
+{% set hero_primary_label = settings.home_hero_primary_label %}
+{% set hero_primary_link = settings.home_hero_primary_link ? settings.home_hero_primary_link | setting_url : store.products_url %}
+{% set hero_secondary_label = settings.home_hero_secondary_label %}
+{% set hero_secondary_link = settings.home_hero_secondary_link ? settings.home_hero_secondary_link | setting_url : store.products_url %}
+{% set hero_info_1_label = settings.home_hero_info_01_label %}
+{% set hero_info_1_value = settings.home_hero_info_01_value %}
+{% set hero_info_2_label = settings.home_hero_info_02_label %}
+{% set hero_info_2_value = settings.home_hero_info_02_value %}
+{% set hero_info_3_label = settings.home_hero_info_03_label %}
+{% set hero_info_3_value = settings.home_hero_info_03_value %}
+{% set hero_image_custom = 'home_hero_background.jpg' | has_custom_image %}
+{% set hero_image_url = hero_image_custom ? ('home_hero_background.jpg' | static_url | settings_image_url('huge')) : ('images/TendaNiceto_1580x700px.jpg' | static_url) %}
+{% set products_link_label = settings.home_products_link_label %}
+{% set featured_title = settings.featured_products_title %}
+{% set featured_kicker = settings.featured_products_kicker ? settings.featured_products_kicker : settings.featured_products_title %}
+{% set featured_subtitle = settings.featured_products_subtitle %}
+{% set sale_title = settings.sale_products_title %}
+{% set sale_kicker = settings.sale_products_kicker ? settings.sale_products_kicker : settings.sale_products_title %}
+{% set sale_subtitle = settings.sale_products_subtitle %}
+{% set new_title = settings.new_products_title %}
+{% set new_kicker = settings.new_products_kicker ? settings.new_products_kicker : settings.new_products_title %}
+{% set new_subtitle = settings.new_products_subtitle %}
+{% set combos_handle = settings.home_combos_category_handle ? settings.home_combos_category_handle | lower : 'combos' %}
+{% set combos_kicker = settings.home_combos_kicker %}
+{% set combos_title_override = settings.home_combos_title %}
+{% set combos_subtitle = settings.home_combos_subtitle %}
+{% set combos_link_label = settings.home_combos_link_label %}
+{% set combo_kicker = settings.banner_01_kicker %}
 {% set combos_category = null %}
 {% for category in categories %}
-    {% if category.handle == combos_handle or category.name | lower == 'combos' %}
+    {% if category.handle == combos_handle or category.name | lower == combos_handle %}
         {% set combos_category = category %}
     {% endif %}
 {% endfor %}
@@ -21,13 +48,13 @@
     {% set combos_products = combos_category.products %}
 {% elseif sections.promotion.products %}
     {% for product in sections.promotion.products %}
-        {% if product.category and (product.category.handle == combos_handle or product.category.name | lower == 'combos') %}
+        {% if product.category and (product.category.handle == combos_handle or product.category.name | lower == combos_handle) %}
             {% set combos_products = combos_products | merge([product]) %}
         {% endif %}
     {% endfor %}
 {% endif %}
 {% set combos_url = combos_category ? combos_category.url : store.products_url %}
-{% set combos_title = combos_category ? combos_category.name : 'Combos' %}
+{% set combos_title = combos_title_override ? combos_title_override : (combos_category ? combos_category.name : 'Combos') %}
 
 <style>
     .niceto-hero-card {
@@ -374,92 +401,127 @@
             <div class="niceto-hero-overlay"></div>
             <div class="niceto-hero-content">
                 <div>
-                    <span class="niceto-kicker">Entrega express</span>
-                    {% if hero_title %}
+                    {% if hero_kicker %}
+                        <span class="niceto-kicker">{{ hero_kicker }}</span>
+                    {% endif %}
+                    {% if hero_title_line_1 or hero_title_line_2 %}
                         <h1 class="font-display text-4xl md:text-6xl mb-6 leading-[0.95] text-gray-900">
-                            {{ hero_title }}
-                        </h1>
-                    {% else %}
-                        <h1 class="font-display text-4xl md:text-6xl mb-6 leading-[0.95] text-gray-900">
-                            Tus antojos,<br>
-                            <span class="text-gray-400">al instante.</span>
+                            {{ hero_title_line_1 }}
+                            {% if hero_title_line_2 %}
+                                <br>
+                                <span class="text-gray-400">{{ hero_title_line_2 }}</span>
+                            {% endif %}
                         </h1>
                     {% endif %}
                     {% if hero_description %}
                         <p class="text-base md:text-lg text-gray-500 mb-8 max-w-md">{{ hero_description }}</p>
-                    {% else %}
-                        <p class="text-base md:text-lg text-gray-500 mb-8 max-w-md">Desde chocolates importados hasta esenciales de farmacia. {{ store.name }} te lo lleva en minutos.</p>
                     {% endif %}
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ hero_link }}" class="niceto-btn niceto-btn--primary">
-                            {{ hero_button_text }}
-                        </a>
-                        <a href="{{ store.products_url }}" class="niceto-btn niceto-btn--ghost">
-                            OFERTAS
-                        </a>
+                        {% if hero_primary_label %}
+                            <a href="{{ hero_primary_link }}" class="niceto-btn niceto-btn--primary">
+                                {{ hero_primary_label }}
+                            </a>
+                        {% endif %}
+                        {% if hero_secondary_label %}
+                            <a href="{{ hero_secondary_link }}" class="niceto-btn niceto-btn--ghost">
+                                {{ hero_secondary_label }}
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="hidden md:flex flex-col gap-3">
-                    <div class="niceto-hero-info">
-                        <i data-lucide="timer" class="w-5 h-5 text-gray-600"></i>
-                        <div>
-                            <span>Entrega</span>
-                            <p class="text-lg font-semibold text-gray-900">15-30 min</p>
+                    {% if hero_info_1_label or hero_info_1_value %}
+                        <div class="niceto-hero-info">
+                            <i data-lucide="timer" class="w-5 h-5 text-gray-600"></i>
+                            <div>
+                                {% if hero_info_1_label %}
+                                    <span>{{ hero_info_1_label }}</span>
+                                {% endif %}
+                                {% if hero_info_1_value %}
+                                    <p class="text-lg font-semibold text-gray-900">{{ hero_info_1_value }}</p>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="niceto-hero-info">
-                        <i data-lucide="package" class="w-5 h-5 text-gray-600"></i>
-                        <div>
-                            <span>Stock real</span>
-                            <p class="text-lg font-semibold text-gray-900">Listo para salir</p>
+                    {% endif %}
+                    {% if hero_info_2_label or hero_info_2_value %}
+                        <div class="niceto-hero-info">
+                            <i data-lucide="package" class="w-5 h-5 text-gray-600"></i>
+                            <div>
+                                {% if hero_info_2_label %}
+                                    <span>{{ hero_info_2_label }}</span>
+                                {% endif %}
+                                {% if hero_info_2_value %}
+                                    <p class="text-lg font-semibold text-gray-900">{{ hero_info_2_value }}</p>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="niceto-hero-info">
-                        <i data-lucide="shield-check" class="w-5 h-5 text-gray-600"></i>
-                        <div>
-                            <span>Pago</span>
-                            <p class="text-lg font-semibold text-gray-900">Seguro y rápido</p>
+                    {% endif %}
+                    {% if hero_info_3_label or hero_info_3_value %}
+                        <div class="niceto-hero-info">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-gray-600"></i>
+                            <div>
+                                {% if hero_info_3_label %}
+                                    <span>{{ hero_info_3_label }}</span>
+                                {% endif %}
+                                {% if hero_info_3_value %}
+                                    <p class="text-lg font-semibold text-gray-900">{{ hero_info_3_value }}</p>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-14 px-6 md:px-12">
-    <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 fade-in-up">
-            <div>
-                <p class="niceto-kicker niceto-kicker--dark">Accesos rápidos</p>
-                <h2 class="text-2xl md:text-3xl font-display tracking-tight">{{ categories_title }}</h2>
+{% if settings.main_categories %}
+    <section class="py-14 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 fade-in-up">
+                <div>
+                    {% if categories_kicker %}
+                        <p class="niceto-kicker niceto-kicker--dark">{{ categories_kicker }}</p>
+                    {% endif %}
+                    <h2 class="text-2xl md:text-3xl font-display tracking-tight">{{ categories_title }}</h2>
+                </div>
+                {% if categories_link_label %}
+                    <a href="{{ categories_link_url }}" class="niceto-link">{{ categories_link_label }}</a>
+                {% endif %}
             </div>
-            <a href="{{ store.products_url }}" class="niceto-link">Ver todas</a>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {% for category in categories | slice(0, 6) %}
+                    {% set category_image = category.images is not empty ? (category.images | first | category_image_url('large')) : ('images/empty-placeholder.png' | static_url) %}
+                    <a href="{{ category.url }}" class="niceto-category-card flex flex-col items-center justify-center gap-3 text-center">
+                        <div class="niceto-category-image">
+                            <img src="{{ category_image }}" alt="{{ category.name }}" loading="lazy">
+                        </div>
+                        <span class="text-sm font-semibold">{{ category.name }}</span>
+                    </a>
+                {% endfor %}
+            </div>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {% for category in categories | slice(0, 6) %}
-                {% set category_image = category.images is not empty ? (category.images | first | category_image_url('large')) : ('images/empty-placeholder.png' | static_url) %}
-                <a href="{{ category.url }}" class="niceto-category-card flex flex-col items-center justify-center gap-3 text-center">
-                    <div class="niceto-category-image">
-                        <img src="{{ category_image }}" alt="{{ category.name }}" loading="lazy">
-                    </div>
-                    <span class="text-sm font-semibold">{{ category.name }}</span>
-                </a>
-            {% endfor %}
-        </div>
-    </div>
-</section>
+    </section>
+{% endif %}
 
 {% if sale_products | length > 0 %}
     <section class="py-16 px-6 md:px-12">
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
                 <div>
-                    <p class="niceto-kicker niceto-kicker--dark">Ofertas</p>
-                    <h2 class="text-3xl md:text-4xl font-display tracking-tight">Precios que vuelan</h2>
-                    <p class="niceto-muted text-sm">Promos activas para resolver el antojo.</p>
+                    {% if sale_kicker %}
+                        <p class="niceto-kicker niceto-kicker--dark">{{ sale_kicker }}</p>
+                    {% endif %}
+                    {% if sale_title %}
+                        <h2 class="text-3xl md:text-4xl font-display tracking-tight">{{ sale_title }}</h2>
+                    {% endif %}
+                    {% if sale_subtitle %}
+                        <p class="niceto-muted text-sm">{{ sale_subtitle }}</p>
+                    {% endif %}
                 </div>
-                <a href="{{ store.products_url }}" class="niceto-link">Ver todo</a>
+                {% if products_link_label %}
+                    <a href="{{ store.products_url }}" class="niceto-link">{{ products_link_label }}</a>
+                {% endif %}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {% for product in sale_products | slice(0, 8) %}
@@ -500,11 +562,19 @@
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
                 <div>
-                    <p class="niceto-kicker niceto-kicker--dark">Destacados</p>
-                    <h2 class="text-3xl md:text-4xl font-display tracking-tight">Selección de la semana</h2>
-                    <p class="niceto-muted text-sm">Lo mejor de la semana seleccionado para vos.</p>
+                    {% if featured_kicker %}
+                        <p class="niceto-kicker niceto-kicker--dark">{{ featured_kicker }}</p>
+                    {% endif %}
+                    {% if featured_title %}
+                        <h2 class="text-3xl md:text-4xl font-display tracking-tight">{{ featured_title }}</h2>
+                    {% endif %}
+                    {% if featured_subtitle %}
+                        <p class="niceto-muted text-sm">{{ featured_subtitle }}</p>
+                    {% endif %}
                 </div>
-                <a href="{{ store.products_url }}" class="niceto-link">Ver todo</a>
+                {% if products_link_label %}
+                    <a href="{{ store.products_url }}" class="niceto-link">{{ products_link_label }}</a>
+                {% endif %}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {% for product in featured_products | slice(0, 8) %}
@@ -545,11 +615,19 @@
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
                 <div>
-                    <p class="niceto-kicker niceto-kicker--dark">Novedades</p>
-                    <h2 class="text-3xl md:text-4xl font-display tracking-tight">Recién llegados</h2>
-                    <p class="niceto-muted text-sm">Productos nuevos para que elijas primero.</p>
+                    {% if new_kicker %}
+                        <p class="niceto-kicker niceto-kicker--dark">{{ new_kicker }}</p>
+                    {% endif %}
+                    {% if new_title %}
+                        <h2 class="text-3xl md:text-4xl font-display tracking-tight">{{ new_title }}</h2>
+                    {% endif %}
+                    {% if new_subtitle %}
+                        <p class="niceto-muted text-sm">{{ new_subtitle }}</p>
+                    {% endif %}
                 </div>
-                <a href="{{ store.products_url }}" class="niceto-link">Ver todo</a>
+                {% if products_link_label %}
+                    <a href="{{ store.products_url }}" class="niceto-link">{{ products_link_label }}</a>
+                {% endif %}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {% for product in new_products | slice(0, 8) %}
@@ -585,44 +663,56 @@
     </section>
 {% endif %}
 
-{% set combo_title = settings.banner_01_title | default('Combo Cine en Casa') %}
-{% set combo_description = settings.banner_01_description | default('Llevate 2 Coca-Cola 1.5L + Lays Clásicas + Chocolate Block con un 20% OFF.') %}
-{% set combo_button = settings.banner_01_button | default('VER COMBOS') %}
-{% set combo_url = settings.banner_01_url ? settings.banner_01_url | setting_url : store.products_url %}
-{% set combo_image_custom = "banner_01.jpg" | has_custom_image %}
-{% set combo_image_url = combo_image_custom ? ("banner_01.jpg" | static_url | settings_image_url('huge')) : ("images/home_promo_image.jpg" | static_url) %}
+{% if settings.banner_01_show %}
+    {% set combo_title = settings.banner_01_title | default('Combo Cine en Casa') %}
+    {% set combo_description = settings.banner_01_description | default('Llevate 2 Coca-Cola 1.5L + Lays Clásicas + Chocolate Block con un 20% OFF.') %}
+    {% set combo_button = settings.banner_01_button | default('VER COMBOS') %}
+    {% set combo_url = settings.banner_01_url ? settings.banner_01_url | setting_url : store.products_url %}
+    {% set combo_image_custom = "banner_01.jpg" | has_custom_image %}
+    {% set combo_image_url = combo_image_custom ? ("banner_01.jpg" | static_url | settings_image_url('huge')) : ("images/home_promo_image.jpg" | static_url) %}
 
-<section class="py-20 px-6">
-    <div class="max-w-6xl mx-auto bg-black text-white rounded-[2rem] overflow-hidden relative fade-in-up">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full blur-[100px] opacity-50 pointer-events-none"></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-12 md:p-20 items-center relative z-10">
-            <div>
-                <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">Combos</span>
-                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 !text-white">{{ combo_title }}</h2>
-                <p class="text-gray-400 text-lg mb-8 font-light">{{ combo_description }}</p>
-                {% if combo_button %}
-                    <a href="{{ combo_url }}" class="bg-white text-black px-8 py-3 rounded-full font-bold tracking-wide hover:bg-gray-200 transition-colors inline-flex items-center">
-                        {{ combo_button }}
-                    </a>
-                {% endif %}
-            </div>
-            <div class="flex justify-center">
-                <img src="{{ combo_image_url }}" alt="{{ combo_title }}" class="rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 w-3/4 object-cover grayscale-[10%]">
+    <section class="py-20 px-6">
+        <div class="max-w-6xl mx-auto bg-black text-white rounded-[2rem] overflow-hidden relative fade-in-up">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full blur-[100px] opacity-50 pointer-events-none"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 p-12 md:p-20 items-center relative z-10">
+                <div>
+                    {% if combo_kicker %}
+                        <span class="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">{{ combo_kicker }}</span>
+                    {% endif %}
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6 !text-white">{{ combo_title }}</h2>
+                    <p class="text-gray-400 text-lg mb-8 font-light">{{ combo_description }}</p>
+                    {% if combo_button %}
+                        <a href="{{ combo_url }}" class="bg-white text-black px-8 py-3 rounded-full font-bold tracking-wide hover:bg-gray-200 transition-colors inline-flex items-center">
+                            {{ combo_button }}
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="flex justify-center">
+                    <img src="{{ combo_image_url }}" alt="{{ combo_title }}" class="rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 w-3/4 object-cover grayscale-[10%]">
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+{% endif %}
 
 {% if combos_products | length > 0 %}
     <section class="py-16 px-6 border-t border-gray-100 bg-white">
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 fade-in-up">
                 <div>
-                    <p class="niceto-kicker niceto-kicker--dark">Combos</p>
-                    <h2 class="text-2xl md:text-3xl font-display tracking-tight">{{ combos_title }}</h2>
-                    <p class="niceto-muted text-sm">Armá tu combo con lo que más te gusta.</p>
+                    {% if combos_kicker %}
+                        <p class="niceto-kicker niceto-kicker--dark">{{ combos_kicker }}</p>
+                    {% endif %}
+                    {% if combos_title %}
+                        <h2 class="text-2xl md:text-3xl font-display tracking-tight">{{ combos_title }}</h2>
+                    {% endif %}
+                    {% if combos_subtitle %}
+                        <p class="niceto-muted text-sm">{{ combos_subtitle }}</p>
+                    {% endif %}
                 </div>
-                <a href="{{ combos_url }}" class="niceto-link">Ver combos</a>
+                {% if combos_link_label %}
+                    <a href="{{ combos_url }}" class="niceto-link">{{ combos_link_label }}</a>
+                {% endif %}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {% for product in combos_products | slice(0, 8) %}
